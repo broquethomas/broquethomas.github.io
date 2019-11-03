@@ -1,0 +1,79 @@
+html {
+    height: 150%;
+    width: 150%;
+    overflow-x:show;
+    
+ }
+body {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(51, 51, 51);    
+ }
+
+ svg {
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+    margin: 0%;
+    border-spacing: 0px;
+    
+ }
+ rect {
+    padding: 0px;
+    border-spacing: 0px;
+ }
+
+ .button {
+  background-color: #000000;
+  color: #FFFFFF;
+  padding: 10px;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  margin:10px
+}
+
+.small-btn {
+  width: 50px;
+  height: 25px;
+}
+
+.medium-btn {
+  width: auto;
+  height: auto;
+}
+
+.big-btn {
+  width: auto;
+  height: auto;
+}
+
+ #myProgress {
+  width: 100%;
+  background-color: grey;
+}
+
+#myBar {
+  width: 1%;
+  height: 30px;
+  background-color: green;
+}
+
+.box {
+    width: 100%;
+    border-spacing: 0px;
+    padding: 0px;
+  }
+.theDivs {
+    margin: 0%;
+    padding: 0px;
+    width: auto;
+    border-spacing: 0px;
+  }
+
+  div {
+    width: 100%;
+    height: 100%;
+ }
+
+  
