@@ -5,7 +5,7 @@ let imageCopy = new Image();
 let imageData;
 let canvas, context;
 let canvasR, canvasG, canvasB, canvasGR, canvasNeg, contextR, contextG, contextB, contextGR, contextNeg
-
+let lastSRC = ""
 let img = new Image();
 let actual = 1
 let size = actual + "px"
@@ -21,6 +21,7 @@ window.addEventListener('load', function() {
             var img = document.getElementById('myImg');  // $('img')[0]
             img.src = URL.createObjectURL(this.files[0]); // set src to file url
             imgSrc = img.src
+            lastSRC = img.src
             img.onload = imageIsLoaded; // optional onload event listener
         }
     });
@@ -70,6 +71,7 @@ function removeFunction() {
 }
 
 function setSize(){
+    document.getElementById("theBox").innerHTML = ""
     let tempVar = ""
     tempVar = prompt("Increase image scale by: (number >= 2)\nBe careful, it grows fast", "0")
     if (tempVar == 0 || tempVar == null){
@@ -90,6 +92,7 @@ function setSize(){
             context = canvas.getContext('2d');
             img.src = imageCopy.src;
             context.drawImage(img, 0, 0);
+            
             imageWork()
         }
         
@@ -99,8 +102,10 @@ function setSize(){
 }
 
 function imageWork(){
-    setupRGB()
-   // document.getElementById('divHeight').style.height = imageHeight
+    if(lastSRC == img.src){
+        setupRGB()
+    }
+    
     coreHTMlString = ""
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
     let theHeight = 0
@@ -133,30 +138,41 @@ function imageWork(){
         let b = "rgba(" + 0 + ", " + 0 + ", " + imageData[n+2] + ", " + 1 + ")"
         let neg = "rgba(" + (255-rVal) + ", " + (255-gVal) + ", " + (255-bVal) + ", " + 1 + ")"
         let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")"
-        contextR.fillStyle = r;
-        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        contextG.fillStyle = g;
-        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        contextB.fillStyle = b;
-        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        contextGR.fillStyle = gr;
-        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        contextNeg.fillStyle = neg;
-        contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        if(lastSRC == img.src){
+            contextR.fillStyle = r;
+            contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextG.fillStyle = g;
+            contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextB.fillStyle = b;
+            contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextGR.fillStyle = gr;
+            contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextNeg.fillStyle = neg;
+            contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        }
+        
+
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
             n += 4 
             theWidth += actual 
             iterations += 1 
             check += 1
+            if(lastSRC == img.src){
+                contextR.fillStyle = r;
+                contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+                contextG.fillStyle = g;
+                contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+                contextB.fillStyle = b;
+                contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+                contextGR.fillStyle = gr;
+                contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+                contextNeg.fillStyle = neg;
+                contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            }
+            
+            
         }
-        contextR.fillStyle = r;
-        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        contextG.fillStyle = g;
-        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        contextB.fillStyle = b;
-        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        contextGR.fillStyle = gr;
-        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+
         iterations += 1
         rect.setAttributeNS(null, 'width', check*actual);
         rect.setAttributeNS(null, 'fill', color);
