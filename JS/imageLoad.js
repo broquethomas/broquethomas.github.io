@@ -10,7 +10,7 @@ let img = new Image();
 let actual = 1
 let size = actual + "px"
 let imgSrc = ""
-let coreHTMlString = ""
+//let coreHTMlString = ""
 
 
 window.addEventListener('load', function() {
