@@ -1,8 +1,8 @@
 html {
-    height: 150%;
-    width: 400%;
+    height: 800%;
+    width: 800%;
     overflow-x:show;
-    
+    overflow-y:show;
  }
 body {
     height: 100%;
