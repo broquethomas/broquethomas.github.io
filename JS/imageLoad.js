@@ -102,6 +102,7 @@ function setSize(){
 }
 
 function imageWork(){
+    document.getElementById("theBox").innerHTML = ""
     if(lastSRC == img.src){
         setupRGB()
     }
