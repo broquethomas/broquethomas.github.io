@@ -143,8 +143,8 @@ function imageWork(){
 }
 
 function imageIsLoaded(e) { 
-    if (this.width*this.height > 1500000){
-        alert("I don't want that many pixels, keep it under 1,500,000px")
+    if (this.width*this.height > 1000000){
+        alert("I don't want that many pixels, keep it under 1,000,000px")
     }else{
         alert("Upload Success");
         imageCopy.src = this.src
