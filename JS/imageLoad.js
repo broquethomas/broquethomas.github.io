@@ -4,7 +4,7 @@ let imageWidth = 0;
 let imageCopy = new Image();
 let imageData;
 let canvas, context;
-let canvasR, canvasG, canvasB, canvasGR, contextR, contextG, contextB, contextGR
+let canvasR, canvasG, canvasB, canvasGR, canvasNeg, contextR, contextG, contextB, contextGR, contextNeg
 
 let img = new Image();
 let actual = 1
@@ -66,6 +66,7 @@ function removeFunction() {
     contextG.clearRect(0, 0, canvasG.width, canvasG.height);
     contextB.clearRect(0, 0, canvasB.width, canvasB.height);
     contextGR.clearRect(0, 0, canvasGR.width, canvasGR.height);
+    contextNeg.clearRect(0, 0, canvasNeg.width, canvasNeg.height);
 }
 
 function setSize(){
@@ -99,6 +100,7 @@ function setSize(){
 
 function imageWork(){
     setupRGB()
+   // document.getElementById('divHeight').style.height = imageHeight
     coreHTMlString = ""
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
     let theHeight = 0
@@ -122,11 +124,14 @@ function imageWork(){
         rect.setAttributeNS(null, 'y', theHeight);
         rect.setAttributeNS(null, 'height', size);
         let check = 1 
-        
-        var average = parseInt((imageData[n] + imageData[n+1] + imageData[n+2])/3)
+        let rVal = imageData[n]
+        let gVal = imageData[n+1]
+        let bVal = imageData[n+2]
+        var average = parseInt((rVal+gVal+bVal)/3)
         let r = "rgba(" + imageData[n] + ", " + 0 + ", " + 0 + ", " + 1 + ")"
         let g = "rgba(" + 0 + ", " + imageData[n+1] + ", " + 0 + ", " + 1 + ")"
         let b = "rgba(" + 0 + ", " + 0 + ", " + imageData[n+2] + ", " + 1 + ")"
+        let neg = "rgba(" + (255-rVal) + ", " + (255-gVal) + ", " + (255-bVal) + ", " + 1 + ")"
         let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")"
         contextR.fillStyle = r;
         contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
@@ -136,6 +141,8 @@ function imageWork(){
         contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         contextGR.fillStyle = gr;
         contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextNeg.fillStyle = neg;
+        contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
             n += 4 
             theWidth += actual 
@@ -188,6 +195,11 @@ function setupRGB(){
     canvasGR.height = imageHeight
     canvasGR.width = imageWidth
     contextGR = canvasGR.getContext('2d');
+
+    canvasNeg = document.getElementById('negImg');
+    canvasNeg.height = imageHeight
+    canvasNeg.width = imageWidth
+    contextNeg = canvasNeg.getContext('2d');
 }
 
 function imageIsLoaded(e) { 
