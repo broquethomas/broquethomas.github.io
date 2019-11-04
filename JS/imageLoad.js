@@ -52,8 +52,6 @@ function copyToClipboard(text) {
     }
 }
 
-
-
 function myFunction(color){
     copyToClipboard(color)
     alert("Copied to clipboard\n" + color)    
@@ -92,7 +90,6 @@ function setSize(){
             context = canvas.getContext('2d');
             img.src = imageCopy.src;
             context.drawImage(img, 0, 0);
-            
             imageWork()
         }
         
@@ -103,11 +100,7 @@ function setSize(){
 
 function imageWork(){
     document.getElementById("theBox").innerHTML = ""
-    if(lastSRC == img.src){
-        setupRGB()
-    }
-    
-    coreHTMlString = ""
+    setupRGB()
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
     let theHeight = 0
     let theWidth = 0
@@ -139,7 +132,21 @@ function imageWork(){
         let b = "rgba(" + 0 + ", " + 0 + ", " + imageData[n+2] + ", " + 1 + ")"
         let neg = "rgba(" + (255-rVal) + ", " + (255-gVal) + ", " + (255-bVal) + ", " + 1 + ")"
         let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")"
-        if(lastSRC == img.src){
+        contextR.fillStyle = r;
+        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextG.fillStyle = g;
+        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextB.fillStyle = b;
+        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextGR.fillStyle = gr;
+        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextNeg.fillStyle = neg;
+        contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
+            n += 4 
+            theWidth += actual 
+            iterations += 1 
+            check += 1
             contextR.fillStyle = r;
             contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
             contextG.fillStyle = g;
@@ -151,29 +158,6 @@ function imageWork(){
             contextNeg.fillStyle = neg;
             contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         }
-        
-
-        while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
-            n += 4 
-            theWidth += actual 
-            iterations += 1 
-            check += 1
-            if(lastSRC == img.src){
-                contextR.fillStyle = r;
-                contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-                contextG.fillStyle = g;
-                contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-                contextB.fillStyle = b;
-                contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-                contextGR.fillStyle = gr;
-                contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-                contextNeg.fillStyle = neg;
-                contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-            }
-            
-            
-        }
-
         iterations += 1
         rect.setAttributeNS(null, 'width', check*actual);
         rect.setAttributeNS(null, 'fill', color);
@@ -181,18 +165,13 @@ function imageWork(){
         rect.onclick = function(){
             myFunction(color)
         }
-       
-        //coreHTMlString += rect.outerHTML
-        theBox.appendChild(rect)
-        
+        theBox.appendChild(rect)   
         theWidth += actual
     }
     console.log("finished")
-    //theBox.innerHTML = coreHTMlString
 }
 
 function setupRGB(){
-
     canvasR = document.getElementById('redImg');
     canvasR.height = imageHeight
     canvasR.width = imageWidth
@@ -224,7 +203,6 @@ function imageIsLoaded(e) {
         alert("I don't want that many pixels, keep it under 1,000,000px")
     }else{
         alert("Upload Success");
-
         imageCopy.src = this.src
         imageHeight = this.height;
         imageWidth = this.width; 
@@ -232,18 +210,13 @@ function imageIsLoaded(e) {
         canvas.height = imageHeight
         canvas.width = imageWidth
         context = canvas.getContext('2d');
-        
-
         img.src = imageCopy.src;
         context.drawImage(img, 0, 0)
-
         var performance = window.performance;
         var t0 = performance.now();
         imageWork()
         var t1 = performance.now();
         console.log("Call to doWork took " + (t1 - t0) + " milliseconds.")
-        
     }
-    
 }   
 
