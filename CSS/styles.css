@@ -1,13 +1,13 @@
 html {
     height: 150%;
-    width: 150%;
+    width: 400%;
     overflow-x:show;
     
  }
 body {
     height: 100%;
     width: 100%;
-    background-color: rgb(51, 51, 51);    
+    background-color:white;    
  }
 
  svg {
@@ -16,8 +16,11 @@ body {
     width: 100%;
     margin: 0%;
     border-spacing: 0px;
-    
  }
+div{
+  width: 100%;
+  
+}
  rect {
     padding: 0px;
     border-spacing: 0px;
@@ -70,10 +73,5 @@ body {
     width: auto;
     border-spacing: 0px;
   }
-
-  div {
-    width: 100%;
-    height: 100%;
- }
 
   

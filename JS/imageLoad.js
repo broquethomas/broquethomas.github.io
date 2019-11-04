@@ -4,6 +4,8 @@ let imageWidth = 0;
 let imageCopy = new Image();
 let imageData;
 let canvas, context;
+let canvasR, canvasG, canvasB, canvasGR, contextR, contextG, contextB, contextGR
+
 let img = new Image();
 let actual = 1
 let size = actual + "px"
@@ -16,19 +18,13 @@ window.addEventListener('load', function() {
         if (this.files && this.files[0]) {
             actual = 1
             document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
-            var img = document.querySelector('img');  // $('img')[0]
+            var img = document.getElementById('myImg');  // $('img')[0]
             img.src = URL.createObjectURL(this.files[0]); // set src to file url
             imgSrc = img.src
             img.onload = imageIsLoaded; // optional onload event listener
         }
     });
 });
-
-function wayTooBig(bigWidth, bigHeight){
-
-}
-
-
 
 function copyToClipboard(text) {
     if (window.clipboardData && window.clipboardData.setData) {
@@ -66,6 +62,10 @@ function removeFunction() {
     document.getElementById("theBox").innerHTML = ""
     document.getElementById('theBox').style.width = 1
     document.getElementById('theBox').style.height = 1
+    contextR.clearRect(0, 0, canvasR.width, canvasR.height);
+    contextG.clearRect(0, 0, canvasG.width, canvasG.height);
+    contextB.clearRect(0, 0, canvasB.width, canvasB.height);
+    contextGR.clearRect(0, 0, canvasGR.width, canvasGR.height);
 }
 
 function setSize(){
@@ -98,19 +98,20 @@ function setSize(){
 }
 
 function imageWork(){
+    setupRGB()
     coreHTMlString = ""
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
     let theHeight = 0
     let theWidth = 0
     let theBox = document.getElementById('theBox');
-    theBox.innerHTML = ""
-    theBox.style.width = imageWidth*actual
-    theBox.style.height = imageHeight*actual
     let iterations = 0
+    let rgbHeight = 0
     for(n = 0; n < imageData.length; n += 4){
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
         let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+
         if(iterations == imageWidth){
+            rgbHeight += 1
             theWidth = 0
             theHeight += actual
             iterations = 0 
@@ -120,26 +121,73 @@ function imageWork(){
         rect.setAttributeNS(null, 'x', theWidth);
         rect.setAttributeNS(null, 'y', theHeight);
         rect.setAttributeNS(null, 'height', size);
-        let check = 1
+        let check = 1 
+        
+        var average = parseInt((imageData[n] + imageData[n+1] + imageData[n+2])/3)
+        let r = "rgba(" + imageData[n] + ", " + 0 + ", " + 0 + ", " + 1 + ")"
+        let g = "rgba(" + 0 + ", " + imageData[n+1] + ", " + 0 + ", " + 1 + ")"
+        let b = "rgba(" + 0 + ", " + 0 + ", " + imageData[n+2] + ", " + 1 + ")"
+        let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")"
+        contextR.fillStyle = r;
+        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextG.fillStyle = g;
+        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextB.fillStyle = b;
+        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextGR.fillStyle = gr;
+        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
             n += 4 
             theWidth += actual 
             iterations += 1 
             check += 1
         }
+        contextR.fillStyle = r;
+        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextG.fillStyle = g;
+        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextB.fillStyle = b;
+        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextGR.fillStyle = gr;
+        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         iterations += 1
         rect.setAttributeNS(null, 'width', check*actual);
         rect.setAttributeNS(null, 'fill', color);
+        rect.appendChild(theTitle)
         rect.onclick = function(){
             myFunction(color)
         }
-        rect.appendChild(theTitle)
+       
         //coreHTMlString += rect.outerHTML
         theBox.appendChild(rect)
+        
         theWidth += actual
     }
     console.log("finished")
     //theBox.innerHTML = coreHTMlString
+}
+
+function setupRGB(){
+
+    canvasR = document.getElementById('redImg');
+    canvasR.height = imageHeight
+    canvasR.width = imageWidth
+    contextR = canvasR.getContext('2d');
+
+    canvasG = document.getElementById('greenImg');
+    canvasG.height = imageHeight
+    canvasG.width = imageWidth
+    contextG = canvasG.getContext('2d');
+
+    canvasB = document.getElementById('blueImg');
+    canvasB.height = imageHeight
+    canvasB.width = imageWidth
+    contextB = canvasB.getContext('2d');
+
+    canvasGR = document.getElementById('grayImg');
+    canvasGR.height = imageHeight
+    canvasGR.width = imageWidth
+    contextGR = canvasGR.getContext('2d');
 }
 
 function imageIsLoaded(e) { 
@@ -154,78 +202,18 @@ function imageIsLoaded(e) {
         canvas.height = imageHeight
         canvas.width = imageWidth
         context = canvas.getContext('2d');
+        
+
         img.src = imageCopy.src;
-        context.drawImage(img, 0, 0);
+        context.drawImage(img, 0, 0)
+
+        var performance = window.performance;
+        var t0 = performance.now();
         imageWork()
+        var t1 = performance.now();
+        console.log("Call to doWork took " + (t1 - t0) + " milliseconds.")
+        
     }
     
 }   
-
-/*
-
-async function imageSetup(){
-    imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
-    
-    var theBox = document.getElementById('theBox');
-    var subcount = 0
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    var linebreak = document.createElement("div");
-    
-    linebreak.className = "theDivs";
-    linebreak.style.height = size
-    for(n = 0; n < imageData.length; n += 4){
-            var color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + imageData[n+3]+ ")"
-            if(subcount == imageWidth){
-                subcount = 0;
-                linebreak.appendChild(svg)
-                svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                theBox.appendChild(linebreak);
-                linebreak = document.createElement("div");
-                linebreak.className = "theDivs";
-                linebreak.style.height = size
-            }
-            var rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-            rect.setAttributeNS(null, 'x', subcount*actual);
-            rect.setAttributeNS(null, 'y', 0);
-            rect.setAttributeNS(null, 'height', size);
-            check = 1
-            while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + imageData[n+7]+ ")" && subcount < imageWidth-1){
-                check += 1
-                subcount += 1
-                n += 4   
-                console.log("here") 
-            }
-            subcount += 1
-            rect.setAttributeNS(null, 'width', actual*check + "px");
-            rect.setAttributeNS(null, 'fill', color);
-            
-            svg.appendChild(rect);
-    }
-}
-
-async function beginWork(){
-    imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
-    
-    var theBox = document.getElementById('theBox');
-    var subcount = 0
-    var linebreak = document.createElement("div");
-    linebreak.className = "theDivs";
-    for(n = 0; n < imageData.length; n += 4){
-        var color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + imageData[n+3]+ ")"
-            if(subcount == imageWidth){
-                subcount = 0;
-                theBox.appendChild(linebreak);
-                linebreak = document.createElement("div");
-                linebreak.className = "theDivs";
-            }
-            var newElm = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            newElm.setAttribute('width', size);
-            newElm.setAttribute('height', size);
-            newElm.style.backgroundColor = color
-            newElm.innerHTML = color
-            linebreak.appendChild(newElm);
-            subcount += 1;
-    }
-}
-*/
 

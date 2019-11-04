@@ -14,8 +14,20 @@
     <input id="clickMe" class='button medium-btn' type="button" value="Destroy the pixels" onclick="removeFunction();"/>
     <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/><h1 id="scaleSize" style='color:white'>Current Scale: 1px == 1px</h1>
     <input  class='button big-btn' type='file' />
-    <br><img id="myImg" src="#" alt=""><br><br>
-    <svg id='theBox'></svg>
+    <div>
+        Original<img id="myImg" src="#" alt="">
+        R<canvas id='redImg' src="#" alt=""></canvas>
+        G<canvas id='greenImg' src="#" alt=""></canvas>
+        B<canvas id='blueImg' src="#" alt=""></canvas>
+        Gray<canvas id='grayImg' src="#" alt=""></canvas>
+    </div>
+    <br>
+    <br>
+    RGB Data<svg id='theBox'></svg>
+    
+    
+    
+
     
     
 </body>
