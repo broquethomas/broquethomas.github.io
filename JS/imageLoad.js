@@ -223,6 +223,7 @@ function imageIsLoaded(e) {
         alert("I don't want that many pixels, keep it under 1,000,000px")
     }else{
         alert("Upload Success");
+
         imageCopy.src = this.src
         imageHeight = this.height;
         imageWidth = this.width; 
