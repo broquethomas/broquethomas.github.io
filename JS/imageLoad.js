@@ -57,6 +57,7 @@ function alertFunction(theData){
 }
 
 function myFunction(color){
+    //commit update revision
     if(color[1] == -1){
         copyToClipboard(color[0])
         alert("Copied to clipboard\n" + color[0])
