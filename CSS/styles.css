@@ -1,7 +1,6 @@
 html {
     height: 100%;
-    width: 600%;
-
+    width: 800%;
  }
 body {
     height: 100%;
@@ -21,7 +20,6 @@ div{
     padding: 0px;
     border-spacing: 0px;
  }
-
  .button {
   background-color: #000000;
   color: #FFFFFF;
@@ -31,33 +29,27 @@ div{
   -webkit-border-radius: 10px;
   margin:10px
 }
-
 .small-btn {
   width: 50px;
   height: 25px;
 }
-
 .medium-btn {
   width: auto;
   height: auto;
 }
-
 .big-btn {
   width: auto;
   height: auto;
 }
-
  #myProgress {
   width: 100%;
   background-color: grey;
 }
-
 #myBar {
   width: 1%;
   height: 30px;
   background-color: green;
 }
-
 .box {
     width: 100%;
     border-spacing: 0px;
