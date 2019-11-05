@@ -130,7 +130,6 @@ function setSize(){
     let tempVar = ""
     tempVar = prompt("Increase image scale by: (number >= 2)\nBe careful, it grows fast", "0")
     if (tempVar == 0 || tempVar == null){
-        
     }else{
         let newSize = parseInt(tempVar)  
         if (newSize <= 0 || newSize > 50 || isNaN(newSize)){
@@ -166,7 +165,6 @@ function imageWork(){
     for(n = 0; n < imageData.length; n += 4){
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
         let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-
         if(iterations == imageWidth){
             rgbHeight += 1
             theWidth = 0
@@ -178,7 +176,6 @@ function imageWork(){
         rect.setAttributeNS(null, 'x', theWidth);
         rect.setAttributeNS(null, 'y', theHeight);
         rect.setAttributeNS(null, 'height', size);
-        
         let check = 1 
         let rVal = imageData[n]
         let gVal = imageData[n+1]
@@ -224,7 +221,6 @@ function imageWork(){
         rect.setAttributeNS(null, 'width', check*actual);
         rect.setAttributeNS(null, 'fill', color);
         rect.appendChild(theTitle)
-        
         theBox.appendChild(rect)   
         theWidth += actual
     }
@@ -260,7 +256,6 @@ function setupRGB(){
 
 function imageIsLoaded(e) { 
     if (this.width*this.height > 1000000 || this.width*this.height < 225){
-        
         if (this.width*this.height > 1000000 ){
             alert("I don't want that many pixels, keep it under 1,000,000px")
         }else{
