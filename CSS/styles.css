@@ -1,25 +1,21 @@
 html {
-    height: 1000%;
-    width: 1000%;
-    overflow-x:show;
-    overflow-y:show;
+    height: 100%;
+    width: 800%;
+
  }
 body {
     height: 100%;
     width: 100%;
     background-color: rgb(51, 51, 51);    
  }
-
  svg {
-    padding: 0px;
-    height: 100%;
-    width: 100%;
-    margin: 0%;
-    border-spacing: 0px;
- }
-div{
+  padding: 0px;
+  height: 100%;
   width: 100%;
-  
+  border-spacing: 0px;
+}
+div{
+  height: relative;
 }
  rect {
     padding: 0px;

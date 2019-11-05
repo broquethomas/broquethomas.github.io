@@ -10,7 +10,6 @@ let img = new Image();
 let actual = 1
 let size = actual + "px"
 let imgSrc = ""
-//let coreHTMlString = ""
 
 
 window.addEventListener('load', function() {
@@ -52,15 +51,73 @@ function copyToClipboard(text) {
     }
 }
 
+function alertFunction(theData){
+    copyToClipboard(theData)
+    alert("Copied to clipboard\n" + theData)
+}
+
 function myFunction(color){
-    copyToClipboard(color)
-    alert("Copied to clipboard\n" + color)    
+    if(color[1] == -1){
+        copyToClipboard(color[0])
+        alert("Copied to clipboard\n" + color[0])
+    }else{
+        copyToClipboard(color[0])
+        alert("Copied to clipboard\n" + color[0])
+        let zoomBox = document.getElementById('zoomBox')
+        let index = 0
+        let found = 0
+        colorCopy = color[1] + 1
+        colorCopy -= 1
+        let iteration = 0
+        let remove = imageWidth*4
+        for(x = 0; x < imageWidth*4; x += 4){
+            index = (colorCopy*imageWidth*4) + x
+            let colorAlt = "rgba(" + imageData[index] + ", " + imageData[index+1] + ", " + imageData[index+2] + ", " + (parseInt(imageData[index+3])/255).toFixed(2) + ")"
+            if(colorAlt == color[0]){
+                console.log("here")
+                found = index
+           }
+        }
+        let xCord = found-1
+        xCord += 1
+        let yCord = imageWidth*4
+        let sub = 5
+        let colorAlt = "rgba(" + imageData[xCord] + ", " + imageData[xCord+1] + ", " + imageData[xCord+2] + ", " + (parseInt(imageData[xCord+3])/255).toFixed(2) + ")"
+        console.log(colorAlt)
+        var loc = 0
+        let miniBox = document.getElementById('zoomBox')
+        miniBox.style.height = 11*40 + "px"
+        miniBox.style.width = 11*40 + "px"
+        iteration = 5
+        for(x = 0; x < 11; x++){
+            sub = 5
+            for(i = 0; i < 11; i++){
+                let colorTemp = "rgba(" + imageData[(xCord+(sub*4))+(yCord*iteration)] + ", " + imageData[(xCord+(sub*4))+(yCord*iteration)+1] + ", " + imageData[(xCord+(sub*4))+(yCord*iteration)+2] + ", " + (parseInt(imageData[(xCord+(sub*4))+(yCord*iteration)+3])/255).toFixed(2) + ")"
+                let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+                let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+                theTitle.textContent = colorTemp
+                rect.setAttributeNS(null, 'x', i*40);
+                rect.setAttributeNS(null, 'y', x*40);
+                rect.setAttributeNS(null, 'height', '40px');
+                rect.onclick = function(){
+                    alertFunction(colorTemp)
+                }
+                rect.setAttributeNS(null, 'width', '40px');
+                rect.setAttributeNS(null, 'fill', colorTemp);
+                rect.appendChild(theTitle)
+                miniBox.appendChild(rect)
+                sub -= 1
+            }
+            iteration -= 1
+        }
+    } 
 }
 function removeFunction() {
     document.getElementById("myImg").src = ""
     document.getElementById("theBox").innerHTML = ""
     document.getElementById('theBox').style.width = 1
     document.getElementById('theBox').style.height = 1
+    document.getElementById("zoomBox").innerHTML = ""
     contextR.clearRect(0, 0, canvasR.width, canvasR.height);
     contextG.clearRect(0, 0, canvasG.width, canvasG.height);
     contextB.clearRect(0, 0, canvasB.width, canvasB.height);
@@ -92,10 +149,7 @@ function setSize(){
             context.drawImage(img, 0, 0);
             imageWork()
         }
-        
     }
-    
-    
 }
 
 function imageWork(){
@@ -105,6 +159,8 @@ function imageWork(){
     let theHeight = 0
     let theWidth = 0
     let theBox = document.getElementById('theBox');
+    theBox.style.height = imageHeight*actual + "px"
+    theBox.style.width = imageWidth*actual + "px"
     let iterations = 0
     let rgbHeight = 0
     for(n = 0; n < imageData.length; n += 4){
@@ -122,6 +178,7 @@ function imageWork(){
         rect.setAttributeNS(null, 'x', theWidth);
         rect.setAttributeNS(null, 'y', theHeight);
         rect.setAttributeNS(null, 'height', size);
+        
         let check = 1 
         let rVal = imageData[n]
         let gVal = imageData[n+1]
@@ -158,13 +215,16 @@ function imageWork(){
             contextNeg.fillStyle = neg;
             contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         }
+        let temp = rgbHeight + 1
+        temp -= 1
+        rect.onclick = function(){
+            myFunction([color, temp])
+        }
         iterations += 1
         rect.setAttributeNS(null, 'width', check*actual);
         rect.setAttributeNS(null, 'fill', color);
         rect.appendChild(theTitle)
-        rect.onclick = function(){
-            myFunction(color)
-        }
+        
         theBox.appendChild(rect)   
         theWidth += actual
     }
@@ -199,8 +259,13 @@ function setupRGB(){
 }
 
 function imageIsLoaded(e) { 
-    if (this.width*this.height > 1000000){
-        alert("I don't want that many pixels, keep it under 1,000,000px")
+    if (this.width*this.height > 1000000 || this.width*this.height < 225){
+        
+        if (this.width*this.height > 1000000 ){
+            alert("I don't want that many pixels, keep it under 1,000,000px")
+        }else{
+            alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
+        }
     }else{
         alert("Upload Success");
         imageCopy.src = this.src

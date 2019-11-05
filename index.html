@@ -9,14 +9,30 @@
     <link rel="stylesheet" type="text/css" href="CSS/styles.css">
 </head>
 <body>
-    <h1 style='color:white'>Pixel Junkie</h1>
+    <div>
+        <h1 style='color:white'>
+            Pixel Junkie
+        </h1>
+    </div>
+    <div>
+        <div>
+            <br>
+            <br>
+            <svg style='height: 1px; float:left;' id='theBox'></svg>
+        </div>
+        <div>
+            <svg style='height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg); float: left;' id='zoomBox'></svg>
+        </div>
+    </div>
+    
     <h2 style='color:white'>Upload your image. </h2>
     <p style='color:white'>Larger images take considerably longer</p>
     <input id="clickMe" class='button medium-btn' type="button" value="Destroy the pixels" onclick="removeFunction();"/>
     <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/><h1 id="scaleSize" style='color:white'>Current Scale: 1px == 1px</h1>
     <input  class='button big-btn' type='file' />
+    
     <div id="divheight">
-        O.I.<img id="myImg" src="#" alt="">
+        <img id="myImg" src="#" alt="">
         <canvas id='redImg' src="#" alt=""></canvas>
         <canvas id='greenImg' src="#" alt=""></canvas>
         <canvas id='blueImg' src="#" alt=""></canvas>
@@ -24,12 +40,7 @@
         <canvas id='negImg' src="#" alt=""></canvas>
     </div>
     <br>
-    RGB Data<svg id='theBox'></svg>
     
-    
-    
-
-    
-    
+ 
 </body>
 </html>
