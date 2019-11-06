@@ -11,7 +11,6 @@ let actual = 1
 let size = actual + "px"
 let imgSrc = ""
 
-
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
         if (this.files && this.files[0]) {
@@ -51,6 +50,8 @@ function copyToClipboard(text) {
     }
 }
 
+
+
 function alertFunction(theData){
     copyToClipboard(theData)
     alert("Copied to clipboard\n" + theData)
@@ -63,7 +64,7 @@ function myFunction(color){
         alert("Copied to clipboard\n" + color[0])
     }else{
         copyToClipboard(color[0])
-        alert("Copied to clipboard\n" + color[0])
+        //alert("Copied to clipboard\n" + color[0])
         let zoomBox = document.getElementById('zoomBox')
         let index = 0
         let found = 0
