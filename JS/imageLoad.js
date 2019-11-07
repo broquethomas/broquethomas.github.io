@@ -70,6 +70,7 @@ function saveCanvasImg(){
 function download(){
     //ctx.drawImage(imgD, 0,0);
     let download = document.createElement('a');
+    //download.href = Url.createObjectURL(canvasD.toBlob).toDataURL('image/png')
     download.href = canvasD.toDataURL('image/png');
     download.download = 'yourImage.Scale-' + actual + 'x' + '.png';
     download.click(); 
@@ -135,6 +136,7 @@ function removeFunction() {
     contextB.clearRect(0, 0, canvasB.width, canvasB.height);
     contextGR.clearRect(0, 0, canvasGR.width, canvasGR.height);
     contextNeg.clearRect(0, 0, canvasNeg.width, canvasNeg.height);
+    ctx.clearRect(0, 0, canvasD.width, canvasD.height);
 }
 
 function setSize(){
