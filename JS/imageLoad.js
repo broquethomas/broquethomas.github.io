@@ -65,32 +65,14 @@ function myFunction(color){
     }else{
         copyToClipboard(color[0])
         //alert("Copied to clipboard\n" + color[0])
-        let zoomBox = document.getElementById('zoomBox')
-        let index = 0
-        let found = 0
-        colorCopy = color[1] + 1
-        colorCopy -= 1
-        let iteration = 0
-        let remove = imageWidth*4
-        for(x = 0; x < imageWidth*4; x += 4){
-            index = (colorCopy*imageWidth*4) + x
-            let colorAlt = "rgba(" + imageData[index] + ", " + imageData[index+1] + ", " + imageData[index+2] + ", " + (parseInt(imageData[index+3])/255).toFixed(2) + ")"
-            if(colorAlt == color[0]){
-                console.log("here")
-                found = index
-           }
-        }
-        let xCord = found-1
-        xCord += 1
+        document.getElementById("zoomBox").innerHTML = ""
         let yCord = imageWidth*4
         let sub = 5
-        let colorAlt = "rgba(" + imageData[xCord] + ", " + imageData[xCord+1] + ", " + imageData[xCord+2] + ", " + (parseInt(imageData[xCord+3])/255).toFixed(2) + ")"
-        console.log(colorAlt)
-        var loc = 0
         let miniBox = document.getElementById('zoomBox')
         miniBox.style.height = 11*40 + "px"
         miniBox.style.width = 11*40 + "px"
         iteration = 5
+        let xCord = color[2]*4 + (imageWidth*color[1])*4
         for(x = 0; x < 11; x++){
             sub = 5
             for(i = 0; i < 11; i++){
@@ -117,6 +99,7 @@ function myFunction(color){
 function removeFunction() {
     document.getElementById("myImg").src = ""
     document.getElementById("theBox").innerHTML = ""
+    document.getElementById("zoomBox").innerHTML = ""
     document.getElementById('theBox').style.width = 1
     document.getElementById('theBox').style.height = 1
     document.getElementById("zoomBox").innerHTML = ""
@@ -216,8 +199,11 @@ function imageWork(){
         }
         let temp = rgbHeight + 1
         temp -= 1
+        let temp2 = iterations - 1
+        temp2 += 1
+
         rect.onclick = function(){
-            myFunction([color, temp])
+            myFunction([color, temp, temp2-(Math.ceil(check/2))])
         }
         iterations += 1
         rect.setAttributeNS(null, 'width', check*actual);
