@@ -97,6 +97,8 @@ function myFunction(color){
     } 
 }
 function removeFunction() {
+    actual = 1
+    document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
     document.getElementById("theBox").innerHTML = ""
     document.getElementById("zoomBox").innerHTML = ""
