@@ -10,6 +10,10 @@ let img = new Image();
 let actual = 1
 let size = actual + "px"
 let imgSrc = ""
+let canvasD = document.createElement('canvas')
+let ctx = canvasD.getContext('2d')
+let imgD  = new Image();
+
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -48,6 +52,27 @@ function copyToClipboard(text) {
             document.body.removeChild(textarea);
         }
     }
+}
+
+function saveCanvasImg(){
+    //imgD = new Image()
+    //canvasD = document.createElement('canvas')
+    //ctx = canvasD.getContext('2d')
+    //let svgString = new XMLSerializer().serializeToString(document.getElementById('theBox'));
+    //imgD.src = 'data:image/svg+xml; charset=utf8, '+encodeURIComponent(svgString);
+    //canvasD.height = imageHeight*actual
+    //canvasD.width = imageWidth*actual
+    //ctx.clearRect(0, 0, canvasD.width, canvasD.height);
+    //imgD.onload = download
+    download()
+}
+
+function download(){
+    //ctx.drawImage(imgD, 0,0);
+    let download = document.createElement('a');
+    download.href = canvasD.toDataURL('image/png');
+    download.download = 'yourImage.Scale-' + actual + 'x' + '.png';
+    download.click(); 
 }
 
 
@@ -139,6 +164,7 @@ function setSize(){
 }
 
 function imageWork(){
+
     document.getElementById("theBox").innerHTML = ""
     setupRGB()
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
@@ -183,6 +209,8 @@ function imageWork(){
         contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         contextNeg.fillStyle = neg;
         contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        let oldTheWidth = theWidth - 1
+        oldTheWidth += 1
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
             n += 4 
             theWidth += actual 
@@ -199,11 +227,18 @@ function imageWork(){
             contextNeg.fillStyle = neg;
             contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         }
+        
+        let tempCheck = check - 1
+        tempCheck += 1
+        if(tempCheck == 1){
+            tempCheck = 0
+        }
+        ctx.fillStyle = color;
+        ctx.fillRect(oldTheWidth, rgbHeight*actual, check*actual, actual);
         let temp = rgbHeight + 1
         temp -= 1
         let temp2 = iterations - 1
         temp2 += 1
-
         rect.onclick = function(){
             myFunction([color, temp, temp2-(Math.ceil(check/2))])
         }
@@ -242,6 +277,11 @@ function setupRGB(){
     canvasNeg.height = imageHeight
     canvasNeg.width = imageWidth
     contextNeg = canvasNeg.getContext('2d');
+
+    canvasD = document.createElement('canvas')
+    canvasD.height = imageHeight*actual
+    canvasD.width = imageWidth*actual
+    ctx = canvasD.getContext('2d')
 }
 
 function imageIsLoaded(e) { 
