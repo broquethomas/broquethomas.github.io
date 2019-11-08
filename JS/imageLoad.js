@@ -180,7 +180,6 @@ function imageWork(height){
     theBox.style.height = imageHeight*actual + "px";
     theBox.style.width = imageWidth*actual + "px";
     let iterations = 0;
-    let rgbHeight = 0;
     for(let i = 0; i < imageWidth; ++i) {
     	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
@@ -231,7 +230,7 @@ function imageWork(height){
 
         ctx.fillStyle = color;
         ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
-        let temp = rgbHeight;
+        let temp = height;
         let temp2 = i;
         rect.onclick = function(){
             myFunction([color, temp, temp2-(Math.ceil(check/2))])
