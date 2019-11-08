@@ -17,16 +17,18 @@
             padding-left: 10px;'>
                 Pixel Junkie
             </h1>
-            
-        <h2 style='color:white'>Upload your image. </h2>
-        <p style='color:white'>Larger images take considerably longer</p>
-        <input  class='button big-btn' type='file' /><br>
-        <input id="clickMe" class='button medium-btn' type="button" value="Destroy the pixels" onclick="removeFunction();"/>
-        <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
-        <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/>
-        <h1 id="scaleSize" style='color:white'>Current Scale: 1px == 1px</h1>
+            <h1 style='color:white'>Upload your image.   (Larger images take considerably longer) </h1>        
+        <span>
+            <input  class='button big-btn' type='file' />
+            <input id="clickMe" class='button medium-btn' type="button" value="Destroy the pixels" onclick="removeFunction();"/>
+            <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
+            <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/>
+        </span>
+        <span>
+                <h1 id="scaleSize" style='color:white; display: none;'>Current Scale: 1px == 1px</h1>
+        </span>
         <div>
-            <svg style='height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg);' id='zoomBox'></svg>
+            <svg style='height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg)' id='zoomBox'></svg>
             <svg style='height: 1px;' id='theBox'></svg>
         </div>
         <div id="divheight">
