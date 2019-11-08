@@ -123,6 +123,7 @@ function myFunction(color){
     } 
 }
 function removeFunction() {
+    document.getElementById('titleLabel').textContent = "Pixel Junkie" 
     actual = 1
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
@@ -160,98 +161,94 @@ function setSize(){
             context = canvas.getContext('2d');
             img.src = imageCopy.src;
             context.drawImage(img, 0, 0);
-            imageWork()
+            startImage();
         }
     }
 }
 
-function imageWork(){
+function startImage() {
+	document.getElementById("theBox").innerHTML = "";
+    setupRGB();
+    imageWork(0);
+}
 
-    document.getElementById("theBox").innerHTML = ""
-    setupRGB()
-    imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
-    let theHeight = 0
-    let theWidth = 0
+function imageWork(height){
+    imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
+    let theHeight = height;
+    let theWidth = 0;
     let theBox = document.getElementById('theBox');
-    theBox.style.height = imageHeight*actual + "px"
-    theBox.style.width = imageWidth*actual + "px"
-    let iterations = 0
-    let rgbHeight = 0
-    for(n = 0; n < imageData.length; n += 4){
+    theBox.style.height = imageHeight*actual + "px";
+    theBox.style.width = imageWidth*actual + "px";
+    let iterations = 0;
+    for(let i = 0; i < imageWidth; ++i) {
+    	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
         let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-        if(iterations == imageWidth){
-            rgbHeight += 1
-            theWidth = 0
-            theHeight += actual
-            iterations = 0 
-        }
+
         let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        theTitle.textContent = color
+        theTitle.textContent = color;
         rect.setAttributeNS(null, 'x', theWidth);
-        rect.setAttributeNS(null, 'y', theHeight);
+        rect.setAttributeNS(null, 'y', height*actual);
         rect.setAttributeNS(null, 'height', size);
-        let check = 1 
-        let rVal = imageData[n]
-        let gVal = imageData[n+1]
-        let bVal = imageData[n+2]
-        var average = parseInt((rVal+gVal+bVal)/3)
-        let r = "rgba(" + imageData[n] + ", " + 0 + ", " + 0 + ", " + 1 + ")"
-        let g = "rgba(" + 0 + ", " + imageData[n+1] + ", " + 0 + ", " + 1 + ")"
-        let b = "rgba(" + 0 + ", " + 0 + ", " + imageData[n+2] + ", " + 1 + ")"
+        let check = 1;
+        let rVal = imageData[n];
+        let gVal = imageData[n+1];
+        let bVal = imageData[n+2];
+        var average = parseInt((rVal+gVal+bVal)/3);
+        let r = "rgba(" + rVal + ", " + 0 + ", " + 0 + ", " + 1 + ")";
+        let g = "rgba(" + 0 + ", " + gVal + ", " + 0 + ", " + 1 + ")";
+        let b = "rgba(" + 0 + ", " + 0 + ", " + bVal + ", " + 1 + ")";
         let neg = "rgba(" + (255-rVal) + ", " + (255-gVal) + ", " + (255-bVal) + ", " + 1 + ")"
-        let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")"
+        let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")";
         contextR.fillStyle = r;
-        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextG.fillStyle = g;
-        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextB.fillStyle = b;
-        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextGR.fillStyle = gr;
-        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextNeg.fillStyle = neg;
-        contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        let oldTheWidth = theWidth - 1
-        oldTheWidth += 1
+        contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
+        let oldTheWidth = theWidth;
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
-            n += 4 
-            theWidth += actual 
-            iterations += 1 
-            check += 1
+            i++;
+            n = 4 * (i + height*imageWidth);
+            theWidth += actual;
+            check += 1;
             contextR.fillStyle = r;
-            contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextG.fillStyle = g;
-            contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextG.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextB.fillStyle = b;
-            contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextB.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextGR.fillStyle = gr;
-            contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextNeg.fillStyle = neg;
-            contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         }
-        
-        let tempCheck = check - 1
-        tempCheck += 1
-        if(tempCheck == 1){
-            tempCheck = 0
-        }
+
         ctx.fillStyle = color;
-        ctx.fillRect(oldTheWidth, rgbHeight*actual, check*actual, actual);
-        let temp = rgbHeight + 1
-        temp -= 1
-        let temp2 = iterations - 1
-        temp2 += 1
+        ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
+        let temp = height;
+        let temp2 = i;
         rect.onclick = function(){
             myFunction([color, temp, temp2-(Math.ceil(check/2))])
         }
-        iterations += 1
         rect.setAttributeNS(null, 'width', check*actual);
         rect.setAttributeNS(null, 'fill', color);
-        rect.appendChild(theTitle)
-        theBox.appendChild(rect)   
-        theWidth += actual
+        rect.appendChild(theTitle);
+        theBox.appendChild(rect);
+        theWidth += actual;
     }
-    console.log("finished")
+    if (height + 1 < imageHeight) {
+    	window.requestAnimationFrame(function() {
+            document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
+    		imageWork(height + 1);
+    	});
+    }else{
+        document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete." 
+    }
 }
 
 function setupRGB(){
@@ -306,7 +303,7 @@ function imageIsLoaded(e) {
         context.drawImage(img, 0, 0)
         var performance = window.performance;
         var t0 = performance.now();
-        imageWork()
+        startImage();
         var t1 = performance.now();
         console.log("Call to doWork took " + (t1 - t0) + " milliseconds.")
     }
