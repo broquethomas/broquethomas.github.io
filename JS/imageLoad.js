@@ -247,7 +247,11 @@ function imageWork(height){
     }
     if (height + 1 < imageHeight) {
     	window.requestAnimationFrame(function() {
-            document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
+            if(parseInt(((height+1) / imageHeight)*100) == 99){
+                document.getElementById('titleLabel').textContent = "Pixel Junkie --> Rendering Image"
+            }else{
+                document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
+            }
     		imageWork(height + 1);
     	});
     }else{
