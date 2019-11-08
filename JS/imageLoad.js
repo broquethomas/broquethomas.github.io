@@ -56,32 +56,24 @@ function copyToClipboard(text) {
 }
 
 function saveCanvasImg(){
-    //imgD = new Image()
-    //canvasD = document.createElement('canvas')
-    //ctx = canvasD.getContext('2d')
-    //let svgString = new XMLSerializer().serializeToString(document.getElementById('theBox'));
-    //imgD.src = 'data:image/svg+xml; charset=utf8, '+encodeURIComponent(svgString);
-    //canvasD.height = imageHeight*actual
-    //canvasD.width = imageWidth*actual
-    //ctx.clearRect(0, 0, canvasD.width, canvasD.height);
-    //imgD.onload = download
     download()
 }
 
 function download(){
-    //ctx.drawImage(imgD, 0,0);
     let download = document.createElement('a');
-    //download.href = Url.createObjectURL(canvasD.toBlob).toDataURL('image/png')
     download.href = canvasD.toDataURL('image/png');
     download.download = 'yourImage.Scale-' + actual + 'x' + '.png';
     download.click(); 
 }
 
-
-
 function alertFunction(theData){
-    copyToClipboard(theData)
-    alert("Copied to clipboard\n" + theData)
+    if(theData == "rgba(undefined, undefined, undefined, NaN)"){
+
+    }else{
+        copyToClipboard(theData)
+        alert("Copied to clipboard\n" + theData)
+    }
+    
 }
 
 function myFunction(color){
@@ -187,7 +179,6 @@ function imageWork(height){
     	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
         let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-
         let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
         theTitle.textContent = color;
         rect.setAttributeNS(null, 'x', theWidth);
