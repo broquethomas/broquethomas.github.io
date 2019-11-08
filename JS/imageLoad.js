@@ -116,7 +116,9 @@ function myFunction(color){
     } 
 }
 function removeFunction() {
+    document.getElementById('scaleSize').style.display = 'none'
     document.getElementById('titleLabel').textContent = "Pixel Junkie" 
+
     actual = 1
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
@@ -165,6 +167,7 @@ function startImage() {
     document.getElementById('titleLabel').classList.add('rainbow');
     temporaryBox.innerHTML = ""
     imageWork(0);
+    document.getElementById('scaleSize').style.display = 'block'
 }
 
 function imageWork(height){
