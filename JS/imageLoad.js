@@ -13,7 +13,8 @@ let imgSrc = ""
 let canvasD = document.createElement('canvas')
 let ctx = canvasD.getContext('2d')
 let imgD  = new Image();
-
+let theBox
+let n = 0
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -141,6 +142,7 @@ function removeFunction() {
 }
 
 function setSize(){
+    
     document.getElementById("theBox").innerHTML = ""
     let tempVar = ""
     tempVar = prompt("Increase image scale by: (number >= 2)\nBe careful, it grows fast", "0")
@@ -161,28 +163,24 @@ function setSize(){
             context = canvas.getContext('2d');
             img.src = imageCopy.src;
             context.drawImage(img, 0, 0);
-            startImage();
+            document.getElementById("theBox").innerHTML = ""
+            setupRGB()
+            document.getElementById('theBox').style.height = imageHeight*actual + "px"
+            document.getElementById('theBox').style.width = imageWidth*actual + "px"
+            n = 0
+            imageWork()
         }
     }
 }
 
-function startImage() {
-	document.getElementById("theBox").innerHTML = "";
-    setupRGB();
-    imageWork(0);
-}
-
-function imageWork(height){
-    imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
-    let theHeight = height;
-    let theWidth = 0;
-    let theBox = document.getElementById('theBox');
-    theBox.style.height = imageHeight*actual + "px";
-    theBox.style.width = imageWidth*actual + "px";
-    let iterations = 0;
-    let rgbHeight = 0;
-    for(let i = 0; i < imageWidth; ++i) {
-    	let n = 4 * (i + height*imageWidth);
+function imageWork(){
+    console.log("here")
+    let theHeight = 0
+    let theWidth = 0
+    theBox = document.getElementById('theBox');
+    let iterations = 0
+    let rgbHeight = 0
+    while(n < imageData.length){
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
         let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
         if(iterations == imageWidth){
@@ -190,6 +188,9 @@ function imageWork(height){
             theWidth = 0
             theHeight += actual
             iterations = 0 
+            document.getElementById('titleLabel').textContent = "Pixel Junkie           " + (n/imageData.length)*100 + "% complete"
+            window.requestAnimationFrame(imageWork)
+            //window.setTimeout(imageWork, 500)
         }
         let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
         theTitle.textContent = color
@@ -219,7 +220,7 @@ function imageWork(height){
         let oldTheWidth = theWidth - 1
         oldTheWidth += 1
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
-            i++;
+            n += 4 
             theWidth += actual 
             iterations += 1 
             check += 1
@@ -234,7 +235,6 @@ function imageWork(height){
             contextNeg.fillStyle = neg;
             contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         }
-        
         let tempCheck = check - 1
         tempCheck += 1
         if(tempCheck == 1){
@@ -255,13 +255,8 @@ function imageWork(height){
         rect.appendChild(theTitle)
         theBox.appendChild(rect)   
         theWidth += actual
+        n += 4
     }
-    if (height + 1 < imageHeight) {
-    	window.requestAnimationFrame(function() {
-    		imageWork(height + 1);
-    	});
-    }    
-    console.log("finished")
 }
 
 function setupRGB(){
@@ -301,7 +296,7 @@ function imageIsLoaded(e) {
         if (this.width*this.height > 1000000 ){
             alert("I don't want that many pixels, keep it under 1,000,000px")
         }else{
-            alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
+            alert( this.width*this.height + "px!? Not Enough, I Need More Pixels!")
         }
     }else{
         alert("Upload Success");
@@ -315,8 +310,15 @@ function imageIsLoaded(e) {
         img.src = imageCopy.src;
         context.drawImage(img, 0, 0)
         var performance = window.performance;
+        
+        imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
+        document.getElementById('theBox').style.height = imageHeight*actual + "px"
+        document.getElementById('theBox').style.width = imageWidth*actual + "px"
         var t0 = performance.now();
-        startImage();
+        document.getElementById("theBox").innerHTML = ""
+        setupRGB()
+        n = 0
+        imageWork()
         var t1 = performance.now();
         console.log("Call to doWork took " + (t1 - t0) + " milliseconds.")
     }
