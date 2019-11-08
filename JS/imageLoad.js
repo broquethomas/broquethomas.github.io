@@ -123,6 +123,7 @@ function myFunction(color){
     } 
 }
 function removeFunction() {
+
     actual = 1
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
@@ -160,24 +161,29 @@ function setSize(){
             context = canvas.getContext('2d');
             img.src = imageCopy.src;
             context.drawImage(img, 0, 0);
-            imageWork()
+            startImage();
         }
     }
 }
 
-function imageWork(){
+function startImage() {
+	document.getElementById("theBox").innerHTML = "";
+    setupRGB();
+    imageWork(0);
+}
 
-    document.getElementById("theBox").innerHTML = ""
-    setupRGB()
-    imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
-    let theHeight = 0
-    let theWidth = 0
+function imageWork(height){
+    
+    imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
+    let theHeight = height;
+    let theWidth = 0;
     let theBox = document.getElementById('theBox');
-    theBox.style.height = imageHeight*actual + "px"
-    theBox.style.width = imageWidth*actual + "px"
-    let iterations = 0
-    let rgbHeight = 0
-    for(n = 0; n < imageData.length; n += 4){
+    theBox.style.height = imageHeight*actual + "px";
+    theBox.style.width = imageWidth*actual + "px";
+    let iterations = 0;
+    let rgbHeight = 0;
+    for(let i = 0; i < imageWidth; ++i) {
+    	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
         let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
         if(iterations == imageWidth){
@@ -214,7 +220,7 @@ function imageWork(){
         let oldTheWidth = theWidth - 1
         oldTheWidth += 1
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
-            n += 4 
+            i++;
             theWidth += actual 
             iterations += 1 
             check += 1
@@ -251,6 +257,9 @@ function imageWork(){
         theBox.appendChild(rect)   
         theWidth += actual
     }
+    if (height + 1 < imageHeight) {
+    	window.requestAnimationFrame(imageWork, height + 1);
+    }    
     console.log("finished")
 }
 
@@ -306,7 +315,7 @@ function imageIsLoaded(e) {
         context.drawImage(img, 0, 0)
         var performance = window.performance;
         var t0 = performance.now();
-        imageWork()
+        startImage();
         var t1 = performance.now();
         console.log("Call to doWork took " + (t1 - t0) + " milliseconds.")
     }
