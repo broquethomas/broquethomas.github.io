@@ -1,4 +1,4 @@
-//Broque Thomas, Pixel Junkie, Oct 31, 2019
+//Broque Thomas, Pixel Junkie, Oct 30, 2019
 let imageHeight = 0;
 let imageWidth = 0;
 let imageCopy = new Image();
