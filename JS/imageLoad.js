@@ -1,4 +1,4 @@
-//Broque Thomas, Pixel Junkie, Oct 30, 2019
+//Broque Thomas, Pixel Junkie, Oct 31, 2019
 let imageHeight = 0;
 let imageWidth = 0;
 let imageCopy = new Image();
@@ -13,8 +13,7 @@ let imgSrc = ""
 let canvasD = document.createElement('canvas')
 let ctx = canvasD.getContext('2d')
 let imgD  = new Image();
-let theBox
-let n = 0
+
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -142,7 +141,6 @@ function removeFunction() {
 }
 
 function setSize(){
-    
     document.getElementById("theBox").innerHTML = ""
     let tempVar = ""
     tempVar = prompt("Increase image scale by: (number >= 2)\nBe careful, it grows fast", "0")
@@ -163,50 +161,46 @@ function setSize(){
             context = canvas.getContext('2d');
             img.src = imageCopy.src;
             context.drawImage(img, 0, 0);
-            document.getElementById("theBox").innerHTML = ""
-            setupRGB()
-            document.getElementById('theBox').style.height = imageHeight*actual + "px"
-            document.getElementById('theBox').style.width = imageWidth*actual + "px"
-            n = 0
-            imageWork()
+            startImage();
         }
     }
 }
 
-function imageWork(){
-    console.log("here")
-    let theHeight = 0
-    let theWidth = 0
-    theBox = document.getElementById('theBox');
-    let iterations = 0
-    let rgbHeight = 0
-    while(n < imageData.length){
+function startImage() {
+	document.getElementById("theBox").innerHTML = "";
+    setupRGB();
+    imageWork(0);
+}
+
+function imageWork(height){
+    imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
+    let theHeight = height;
+    let theWidth = 0;
+    let theBox = document.getElementById('theBox');
+    theBox.style.height = imageHeight*actual + "px";
+    theBox.style.width = imageWidth*actual + "px";
+    let iterations = 0;
+    let rgbHeight = 0;
+    for(let i = 0; i < imageWidth; ++i) {
+    	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
         let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-        if(iterations == imageWidth){
-            rgbHeight += 1
-            theWidth = 0
-            theHeight += actual
-            iterations = 0 
-            document.getElementById('titleLabel').textContent = "Pixel Junkie           " + (n/imageData.length)*100 + "% complete"
-            window.requestAnimationFrame(imageWork)
-            //window.setTimeout(imageWork, 500)
-        }
+
         let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        theTitle.textContent = color
+        theTitle.textContent = color;
         rect.setAttributeNS(null, 'x', theWidth);
         rect.setAttributeNS(null, 'y', theHeight);
         rect.setAttributeNS(null, 'height', size);
-        let check = 1 
-        let rVal = imageData[n]
-        let gVal = imageData[n+1]
-        let bVal = imageData[n+2]
-        var average = parseInt((rVal+gVal+bVal)/3)
-        let r = "rgba(" + imageData[n] + ", " + 0 + ", " + 0 + ", " + 1 + ")"
-        let g = "rgba(" + 0 + ", " + imageData[n+1] + ", " + 0 + ", " + 1 + ")"
-        let b = "rgba(" + 0 + ", " + 0 + ", " + imageData[n+2] + ", " + 1 + ")"
+        let check = 1;
+        let rVal = imageData[n];
+        let gVal = imageData[n+1];
+        let bVal = imageData[n+2];
+        var average = parseInt((rVal+gVal+bVal)/3);
+        let r = "rgba(" + rVal + ", " + 0 + ", " + 0 + ", " + 1 + ")";
+        let g = "rgba(" + 0 + ", " + gVal + ", " + 0 + ", " + 1 + ")";
+        let b = "rgba(" + 0 + ", " + 0 + ", " + bVal + ", " + 1 + ")";
         let neg = "rgba(" + (255-rVal) + ", " + (255-gVal) + ", " + (255-bVal) + ", " + 1 + ")"
-        let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")"
+        let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")";
         contextR.fillStyle = r;
         contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         contextG.fillStyle = g;
@@ -217,13 +211,12 @@ function imageWork(){
         contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         contextNeg.fillStyle = neg;
         contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
-        let oldTheWidth = theWidth - 1
-        oldTheWidth += 1
+        let oldTheWidth = theWidth;
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
-            n += 4 
-            theWidth += actual 
-            iterations += 1 
-            check += 1
+            i++;
+            n = 4 * (i + height*imageWidth);
+            theWidth += actual;
+            check += 1;
             contextR.fillStyle = r;
             contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
             contextG.fillStyle = g;
@@ -235,28 +228,26 @@ function imageWork(){
             contextNeg.fillStyle = neg;
             contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
         }
-        let tempCheck = check - 1
-        tempCheck += 1
-        if(tempCheck == 1){
-            tempCheck = 0
-        }
+
         ctx.fillStyle = color;
         ctx.fillRect(oldTheWidth, rgbHeight*actual, check*actual, actual);
-        let temp = rgbHeight + 1
-        temp -= 1
-        let temp2 = iterations - 1
-        temp2 += 1
+        let temp = rgbHeight;
+        let temp2 = i;
         rect.onclick = function(){
             myFunction([color, temp, temp2-(Math.ceil(check/2))])
         }
-        iterations += 1
         rect.setAttributeNS(null, 'width', check*actual);
         rect.setAttributeNS(null, 'fill', color);
-        rect.appendChild(theTitle)
-        theBox.appendChild(rect)   
-        theWidth += actual
-        n += 4
+        rect.appendChild(theTitle);
+        theBox.appendChild(rect);
+        theWidth += actual;
     }
+    if (height + 1 < imageHeight) {
+    	window.requestAnimationFrame(function() {
+    		imageWork(height + 1);
+    	});
+    }    
+    console.log("finished");
 }
 
 function setupRGB(){
@@ -296,7 +287,7 @@ function imageIsLoaded(e) {
         if (this.width*this.height > 1000000 ){
             alert("I don't want that many pixels, keep it under 1,000,000px")
         }else{
-            alert( this.width*this.height + "px!? Not Enough, I Need More Pixels!")
+            alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
         }
     }else{
         alert("Upload Success");
@@ -310,15 +301,8 @@ function imageIsLoaded(e) {
         img.src = imageCopy.src;
         context.drawImage(img, 0, 0)
         var performance = window.performance;
-        
-        imageData = context.getImageData(0, 0, imageWidth, imageHeight).data
-        document.getElementById('theBox').style.height = imageHeight*actual + "px"
-        document.getElementById('theBox').style.width = imageWidth*actual + "px"
         var t0 = performance.now();
-        document.getElementById("theBox").innerHTML = ""
-        setupRGB()
-        n = 0
-        imageWork()
+        startImage();
         var t1 = performance.now();
         console.log("Call to doWork took " + (t1 - t0) + " milliseconds.")
     }
