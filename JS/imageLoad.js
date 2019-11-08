@@ -202,15 +202,15 @@ function imageWork(height){
         let neg = "rgba(" + (255-rVal) + ", " + (255-gVal) + ", " + (255-bVal) + ", " + 1 + ")"
         let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")";
         contextR.fillStyle = r;
-        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextG.fillStyle = g;
-        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextG.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextB.fillStyle = b;
-        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextB.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextGR.fillStyle = gr;
-        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextNeg.fillStyle = neg;
-        contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+        contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         let oldTheWidth = theWidth;
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
             i++;
@@ -218,19 +218,19 @@ function imageWork(height){
             theWidth += actual;
             check += 1;
             contextR.fillStyle = r;
-            contextR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextG.fillStyle = g;
-            contextG.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextG.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextB.fillStyle = b;
-            contextB.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextB.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextGR.fillStyle = gr;
-            contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextNeg.fillStyle = neg;
-            contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), rgbHeight, check, 1);
+            contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         }
 
         ctx.fillStyle = color;
-        ctx.fillRect(oldTheWidth, rgbHeight*actual, check*actual, actual);
+        ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
         let temp = rgbHeight;
         let temp2 = i;
         rect.onclick = function(){
