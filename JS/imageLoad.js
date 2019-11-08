@@ -123,7 +123,7 @@ function myFunction(color){
     } 
 }
 function removeFunction() {
-
+    document.getElementById('titleLabel').textContent = "Pixel Junkie" 
     actual = 1
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
@@ -188,7 +188,7 @@ function imageWork(height){
         let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
         theTitle.textContent = color;
         rect.setAttributeNS(null, 'x', theWidth);
-        rect.setAttributeNS(null, 'y', theHeight);
+        rect.setAttributeNS(null, 'y', height*actual);
         rect.setAttributeNS(null, 'height', size);
         let check = 1;
         let rVal = imageData[n];
@@ -243,10 +243,12 @@ function imageWork(height){
     }
     if (height + 1 < imageHeight) {
     	window.requestAnimationFrame(function() {
+            document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
     		imageWork(height + 1);
     	});
-    }    
-    console.log("finished");
+    }else{
+        document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete." 
+    }
 }
 
 function setupRGB(){
