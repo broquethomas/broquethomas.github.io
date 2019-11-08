@@ -14,6 +14,7 @@ let canvasD = document.createElement('canvas')
 let ctx = canvasD.getContext('2d')
 let imgD  = new Image();
 let colorArray = [ "rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(0, 0, 255, 1.00)","rgba(0, 0, 255, 1.00)","rgba(255, 0, 0, 1.00)"]
+let temporaryBox = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -169,7 +170,8 @@ function setSize(){
 function startImage() {
 	document.getElementById("theBox").innerHTML = "";
     setupRGB();
-    document.getElementById('titleLabel').classList.add('rainbow'); 
+    document.getElementById('titleLabel').classList.add('rainbow');
+    temporaryBox.innerHTML = ""
     imageWork(0);
 }
 
@@ -181,18 +183,6 @@ function imageWork(height){
     theBox.style.height = imageHeight*actual + "px";
     theBox.style.width = imageWidth*actual + "px";
     let iterations = 0;
-    var tempColor = colorArray[0]
-    colorArray[0] = colorArray[1]
-    colorArray[1] = colorArray[2]
-    colorArray[2] = colorArray[3]
-    colorArray[3] = colorArray[4]
-    colorArray[4] = colorArray[5]
-    colorArray[5] = colorArray[6]
-    colorArray[6] = colorArray[7]
-    colorArray[7] = colorArray[8]
-    colorArray[8] = colorArray[9]
-    colorArray[9] = colorArray[10]
-    colorArray[10] = colorArray[tempColor]
     for(let i = 0; i < imageWidth; ++i) {
     	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
@@ -251,18 +241,19 @@ function imageWork(height){
         rect.setAttributeNS(null, 'width', check*actual);
         rect.setAttributeNS(null, 'fill', color);
         rect.appendChild(theTitle);
-        theBox.appendChild(rect);
+        temporaryBox.appendChild(rect)
+        //theBox.appendChild(rect);
         theWidth += actual;
     }
     if (height + 1 < imageHeight) {
     	window.requestAnimationFrame(function() {
-            //document.getElementById('titleLabel').textContent = "P".fontcolor(colorArray[0]) + "i".fontcolor(colorArray[1]) + "x".fontcolor(colorArray[2]) + "e".fontcolor(colorArray[3]) + "l ".fontcolor(colorArray[4]) + "J".fontcolor(colorArray[5]) + "u".fontcolor(colorArray[6]) + "n".fontcolor(colorArray[7]) + "k".fontcolor(colorArray[8]) + "i".fontcolor(colorArray[9]) + "e ".fontcolor(colorArray[10]) + "--> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
             document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
     		imageWork(height + 1);
     	});
     }else{
         document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete."
         document.getElementById('titleLabel').classList.remove('rainbow'); 
+        theBox.appendChild(temporaryBox)
     }
 }
 
