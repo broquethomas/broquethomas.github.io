@@ -173,7 +173,6 @@ function startImage() {
 }
 
 function imageWork(height){
-    
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
     let theHeight = height;
     let theWidth = 0;
@@ -258,7 +257,9 @@ function imageWork(height){
         theWidth += actual
     }
     if (height + 1 < imageHeight) {
-    	window.requestAnimationFrame(imageWork, height + 1);
+    	window.requestAnimationFrame(function() {
+    		imageWork(height + 1);
+    	});
     }    
     console.log("finished")
 }
