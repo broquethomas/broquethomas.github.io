@@ -20,7 +20,7 @@
             <h1 style='color:white'>Upload your image.   (Larger images take considerably longer) </h1>        
         <span>
             <input  class='button big-btn' type='file' />
-            <input id="clickMe" class='button medium-btn' type="button" value="Destroy the pixels" onclick="removeFunction();"/>
+            <input id="clickMe" class='button medium-btn' type="button" value="Destroy The Pixels" onclick="removeFunction();"/>
             <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
             <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/>
         </span>
@@ -34,13 +34,13 @@
         <div id="divheight">
                 <br>
                 <img id="myImg" src="#" alt="">
-                <canvas id='redImg' src="#" alt=""></canvas>
+                <canvas id='redImg' src="#" alt="" onclick="swapFunctionR();"></canvas>
                 <br>
-                <canvas id='greenImg' src="#" alt=""></canvas>
-                <canvas id='blueImg' src="#" alt=""></canvas>
+                <canvas id='greenImg' src="#" alt="" onclick="swapFunctionG();"></canvas>
+                <canvas id='blueImg' src="#" alt="" onclick="swapFunctionB();"></canvas>
                 <br>
-                <canvas id='grayImg' src="#" alt=""></canvas>
-                <canvas id='negImg' src="#" alt=""></canvas>
+                <canvas id='grayImg' src="#" alt="" onclick="swapFunctionGR();"></canvas>
+                <canvas id='negImg' src="#" alt="" onclick="swapFunctionNeg();"></canvas>
         </div>
     </div>
 
