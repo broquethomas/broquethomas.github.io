@@ -189,12 +189,12 @@ function swapFunctionNeg(){
 
 function removeFunction() {
     document.getElementById('scaleSize').style.display = 'none'
-    document.getElementById('titleLabel').textContent = "Pixel Junkie" 
-    canvasR.style.boxShadow = ''
-    canvasG.style.boxShadow = ''
-    canvasB.style.boxShadow = ''
-    canvasGR.style.boxShadow = ''
-    canvasNeg.style.boxShadow = ''
+    document.getElementById('titleLabel').textContent = "Pixel Junkie"
+    canvasR.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
+    canvasG.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
+    canvasB.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
+    canvasGR.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
+    canvasNeg.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
     actual = 1
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
@@ -216,7 +216,7 @@ function setSize(){
     let tempVar = ""
     tempVar = prompt("Increase image scale by: (Number >= 1)\nBrowser limitations may not allow downloads of images scaled over 250,000,000px", "0")
     if (tempVar == 0 || tempVar == null || tempVar == "0"){
-        
+
     }else{
         
         let newSize = parseInt(tempVar)  
@@ -359,34 +359,34 @@ function setupRGB(){
     canvasR.height = imageHeight
     canvasR.width = imageWidth
     contextR = canvasR.getContext('2d');
-    canvasR.style.boxShadow = '3px 3px red'
+    canvasR.style.setProperty('--box-shadow-color', 'red');
 
     canvasG = document.getElementById('greenImg');
     canvasG.height = imageHeight
     canvasG.width = imageWidth
     contextG = canvasG.getContext('2d');
-    canvasG.style.boxShadow = '3px 3px green'
+    canvasG.style.setProperty('--box-shadow-color', 'green');
 
 
     canvasB = document.getElementById('blueImg');
     canvasB.height = imageHeight
     canvasB.width = imageWidth
     contextB = canvasB.getContext('2d');
-    canvasB.style.boxShadow = '4px 4px blue'
+    canvasB.style.setProperty('--box-shadow-color', 'blue');
 
 
     canvasGR = document.getElementById('grayImg');
     canvasGR.height = imageHeight
     canvasGR.width = imageWidth
     contextGR = canvasGR.getContext('2d');
-    canvasGR.style.boxShadow = '4px 4px gray'
+    canvasGR.style.setProperty('--box-shadow-color', 'gray');
 
 
     canvasNeg = document.getElementById('negImg');
     canvasNeg.height = imageHeight
     canvasNeg.width = imageWidth
     contextNeg = canvasNeg.getContext('2d');
-    canvasNeg.style.boxShadow = '4px 4px white'
+    canvasNeg.style.setProperty('--box-shadow-color', 'white');
 
 
     canvasD = document.createElement('canvas')
