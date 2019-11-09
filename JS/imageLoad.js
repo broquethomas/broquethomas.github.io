@@ -13,8 +13,9 @@ let imgSrc = ""
 let canvasD = document.createElement('canvas')
 let ctx = canvasD.getContext('2d')
 let imgD  = new Image();
-let colorArray = [ "rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(255, 255, 255, 1.00)","rgba(0, 0, 255, 1.00)","rgba(0, 0, 255, 1.00)","rgba(255, 0, 0, 1.00)"]
 let temporaryBox = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+let imageArray = []
+let imageSelection = 0
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -115,6 +116,74 @@ function myFunction(color){
         }
     } 
 }
+
+
+
+function swapFunctionR(){
+    var tempSwap = prompt("Use RED channel as src image?\n      (Y, N)")
+    if(tempSwap == "Y" || tempSwap == "y"){
+            imageSelection = 0
+            actual = 1
+            var img = document.getElementById('myImg')
+            img.src = imageArray[imageSelection].src
+            imgSrc = img.src
+            lastSRC = img.src
+            img.onload = imageIsLoaded
+    }
+}
+
+function swapFunctionG(){
+    var tempSwap = prompt("Use GREEN channel as src image?\n      (Y, N)")
+    if(tempSwap == "Y" || tempSwap == "y"){
+            imageSelection = 1
+            actual = 1
+            var img = document.getElementById('myImg')
+            img.src = imageArray[imageSelection].src
+            imgSrc = img.src
+            lastSRC = img.src
+            img.onload = imageIsLoaded
+    }
+}
+
+function swapFunctionB(){
+    var tempSwap = prompt("Use BLUE channel as src image?\n      (Y, N)")
+    if(tempSwap == "Y" || tempSwap == "y"){
+            imageSelection = 2
+            actual = 1
+            var img = document.getElementById('myImg')
+            img.src = imageArray[imageSelection].src
+            imgSrc = img.src
+            lastSRC = img.src
+            img.onload = imageIsLoaded
+    }
+}
+
+function swapFunctionGR(){
+    var tempSwap = prompt("Use Gray Image as src image?\n      (Y, N)")
+    if(tempSwap == "Y" || tempSwap == "y"){
+            imageSelection = 3
+            actual = 1
+            var img = document.getElementById('myImg')
+            img.src = imageArray[imageSelection].src
+            imgSrc = img.src
+            lastSRC = img.src
+            img.onload = imageIsLoaded
+    }
+}
+
+function swapFunctionNeg(){
+    var tempSwap = prompt("Use Negative Image as src image?\n      (Y, N)")
+    if(tempSwap == "Y" || tempSwap == "y"){
+            imageSelection = 4
+            actual = 1
+            var img = document.getElementById('myImg')
+            img.src = imageArray[imageSelection].src
+            imgSrc = img.src
+            lastSRC = img.src
+            img.onload = imageIsLoaded    
+    }
+}
+
 function removeFunction() {
     document.getElementById('scaleSize').style.display = 'none'
     document.getElementById('titleLabel').textContent = "Pixel Junkie" 
@@ -140,6 +209,7 @@ function setSize(){
     let tempVar = ""
     tempVar = prompt("Increase image scale by: (number >= 2)\nBe careful, it grows fast", "0")
     if (tempVar == 0 || tempVar == null){
+
     }else{
         let newSize = parseInt(tempVar)  
         if (newSize <= 0 || newSize > 50 || isNaN(newSize)){
@@ -149,6 +219,7 @@ function setSize(){
         size = actual + "px"
         document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
         if(imgSrc != ""){
+            console.log("here")
             imageCopy.src = imgSrc
             canvas = document.createElement('canvas');
             canvas.height = imageHeight
@@ -252,6 +323,26 @@ function imageWork(height){
         document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete."
         document.getElementById('titleLabel').classList.remove('rainbow'); 
         theBox.appendChild(temporaryBox)
+        let tempImageR = new Image()
+        tempImageR.src = canvasR.toDataURL()
+        imageArray.push(tempImageR)
+        let tempImageG = new Image()
+
+        tempImageG.src = canvasG.toDataURL()
+        imageArray.push(tempImageG)
+        let tempImageB = new Image()
+
+        tempImageB.src = canvasB.toDataURL()
+        imageArray.push(tempImageB)
+        let tempImageGR = new Image()
+
+        tempImageGR.src = canvasGR.toDataURL()
+        imageArray.push(tempImageGR)
+        let tempImageNeg = new Image()
+
+        tempImageNeg.src = canvasNeg.toDataURL()
+        imageArray.push(tempImageNeg)
+        myFunction(["color", Math.floor(imageHeight/2), Math.floor(imageWidth/2)])
     }
 }
 
@@ -295,7 +386,7 @@ function imageIsLoaded(e) {
             alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
         }
     }else{
-        alert("Upload Success");
+        imageArray = []
         imageCopy.src = this.src
         imageHeight = this.height;
         imageWidth = this.width; 

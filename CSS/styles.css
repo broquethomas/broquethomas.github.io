@@ -1,6 +1,6 @@
 html {
     height: auto;
-    width: auto;
+    width: 200%;
  }
 body {
     height: 100%;
@@ -24,12 +24,22 @@ h1{
   font-family: 'VT323', monospace;
 }
 img {
-  padding:1px;
-  border:1px solid #ffffff;
+  border-color: gray;
+  border:5px solid gray;
+  padding: 10px;
+}
+
+canvas {
+  padding: 10px;
+}
+
+.containerBorder {
+  border-color: black;
+  border: 5px;
+  
 }
 
 .rainbow {
- 
   /* Chrome, Safari, Opera */
  -webkit-animation: rainbow 5s infinite; 
  
