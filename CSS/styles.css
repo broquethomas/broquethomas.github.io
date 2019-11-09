@@ -30,13 +30,16 @@ img {
 }
 
 canvas {
+  padding: 10px;
+}
+
+.containerBorder {
   border-color: black;
-  border:5px solid black;
-  padding: 5px;
+  border: 5px;
+  
 }
 
 .rainbow {
- 
   /* Chrome, Safari, Opera */
  -webkit-animation: rainbow 5s infinite; 
  
