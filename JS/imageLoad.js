@@ -16,6 +16,7 @@ let imgD  = new Image();
 let temporaryBox = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 let imageArray = []
 let imageSelection = 0
+let downloadHref = ""
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -62,7 +63,9 @@ function saveCanvasImg(){
 
 function download(){
     let download = document.createElement('a');
-    download.href = canvasD.toDataURL('image/png');
+    //download.href = canvasD.toDataURL('image/png');
+    download.href = downloadHref
+    console.log(canvasD.width*canvasD.height)
     download.download = 'yourImage.Scale-' + actual + 'x' + '.png';
     download.click(); 
 }
@@ -187,7 +190,11 @@ function swapFunctionNeg(){
 function removeFunction() {
     document.getElementById('scaleSize').style.display = 'none'
     document.getElementById('titleLabel').textContent = "Pixel Junkie" 
-
+    canvasR.style.boxShadow = ''
+    canvasG.style.boxShadow = ''
+    canvasB.style.boxShadow = ''
+    canvasGR.style.boxShadow = ''
+    canvasNeg.style.boxShadow = ''
     actual = 1
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
@@ -207,19 +214,19 @@ function removeFunction() {
 function setSize(){
     document.getElementById("theBox").innerHTML = ""
     let tempVar = ""
-    tempVar = prompt("Increase image scale by: (number >= 2)\nBe careful, it grows fast", "0")
-    if (tempVar == 0 || tempVar == null){
-
+    tempVar = prompt("Increase image scale by: (Number >= 1)\nBrowser limitations may not allow downloads of images scaled over 250,000,000px", "0")
+    if (tempVar == 0 || tempVar == null || tempVar == "0"){
+        
     }else{
+        
         let newSize = parseInt(tempVar)  
-        if (newSize <= 0 || newSize > 50 || isNaN(newSize)){
+        if (newSize <= 0 || newSize > 100|| isNaN(newSize)){
             setSize()
         }
         actual = newSize
         size = actual + "px"
         document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
         if(imgSrc != ""){
-            console.log("here")
             imageCopy.src = imgSrc
             canvas = document.createElement('canvas');
             canvas.height = imageHeight
@@ -320,6 +327,7 @@ function imageWork(height){
     		imageWork(height + 1);
     	});
     }else{
+        downloadHref = canvasD.toDataURL('image/png');
         document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete."
         document.getElementById('titleLabel').classList.remove('rainbow'); 
         theBox.appendChild(temporaryBox)
@@ -351,26 +359,35 @@ function setupRGB(){
     canvasR.height = imageHeight
     canvasR.width = imageWidth
     contextR = canvasR.getContext('2d');
+    canvasR.style.boxShadow = '3px 3px red'
 
     canvasG = document.getElementById('greenImg');
     canvasG.height = imageHeight
     canvasG.width = imageWidth
     contextG = canvasG.getContext('2d');
+    canvasG.style.boxShadow = '3px 3px green'
+
 
     canvasB = document.getElementById('blueImg');
     canvasB.height = imageHeight
     canvasB.width = imageWidth
     contextB = canvasB.getContext('2d');
+    canvasB.style.boxShadow = '4px 4px blue'
+
 
     canvasGR = document.getElementById('grayImg');
     canvasGR.height = imageHeight
     canvasGR.width = imageWidth
     contextGR = canvasGR.getContext('2d');
+    canvasGR.style.boxShadow = '4px 4px gray'
+
 
     canvasNeg = document.getElementById('negImg');
     canvasNeg.height = imageHeight
     canvasNeg.width = imageWidth
     contextNeg = canvasNeg.getContext('2d');
+    canvasNeg.style.boxShadow = '4px 4px white'
+
 
     canvasD = document.createElement('canvas')
     canvasD.height = imageHeight*actual
