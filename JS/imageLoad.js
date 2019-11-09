@@ -188,6 +188,9 @@ function swapFunctionNeg(){
 }
 
 function removeFunction() {
+    document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
+    document.getElementById('theBox').style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
+
     document.getElementById('scaleSize').style.display = 'none'
     document.getElementById('titleLabel').textContent = "Pixel Junkie"
     canvasR.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
@@ -327,6 +330,8 @@ function imageWork(height){
     		imageWork(height + 1);
     	});
     }else{
+        document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'white');
+        document.getElementById('theBox').style.setProperty('--box-shadow-color', 'white');
         downloadHref = canvasD.toDataURL('image/png');
         document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete."
         document.getElementById('titleLabel').classList.remove('rainbow'); 
@@ -355,6 +360,8 @@ function imageWork(height){
 }
 
 function setupRGB(){
+    
+
     canvasR = document.getElementById('redImg');
     canvasR.height = imageHeight
     canvasR.width = imageWidth
