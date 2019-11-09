@@ -342,6 +342,7 @@ function imageWork(height){
 
         tempImageNeg.src = canvasNeg.toDataURL()
         imageArray.push(tempImageNeg)
+        myFunction(["color", Math.floor(imageHeight/2), Math.floor(imageWidth/2)])
     }
 }
 
