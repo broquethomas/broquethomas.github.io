@@ -4,7 +4,7 @@ let imageWidth = 0;
 let imageCopy = new Image();
 let imageData;
 let canvas, context;
-let canvasR, canvasG, canvasB, canvasGR, canvasNeg, contextR, contextG, contextB, contextGR, contextNeg
+let canvasR, canvasG, canvasB, canvasGR, canvasNeg, canvasCore, contextR, contextG, contextB, contextGR, contextNeg, contextCore
 let lastSRC = ""
 let img = new Image();
 let actual = 1
@@ -17,6 +17,7 @@ let temporaryBox = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
 let imageArray = []
 let imageSelection = 0
 let downloadHref = ""
+let firstSetup = true
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -31,6 +32,27 @@ window.addEventListener('load', function() {
         }
     });
 });
+
+function getCursorPosition(canvasIn, event) {
+    const rect = canvasIn.getBoundingClientRect()
+    const x = Math.floor((event.clientX - rect.left)/actual)
+    const y = Math.floor((event.clientY - rect.top)/actual)
+    let color = "rgba(" + imageData[((imageWidth*y*4) + x*4)] + ", " + imageData[((imageWidth*y*4) + x*4)+1] + ", " + imageData[((imageWidth*y*4) + x*4)+2] + ", " + (parseInt(imageData[((imageWidth*y*4) + x*4)+3])/255).toFixed(2) + ")"
+    //console.log("x: " + x + " y: " + y)
+    document.getElementById('pixelData').textContent = color + " *Copied to clipboard*"
+    copyToClipboard(color)
+    myFunction(["jib", y, x])
+}
+
+function getMousePos(canvasIn, event) {
+    var rect = canvasIn.getBoundingClientRect();
+    const x = Math.floor((event.clientX - rect.left)/actual)
+    const y = Math.floor((event.clientY - rect.top)/actual)
+    getPixelData(x, y)
+    console.log("x: " + x + " y: " + y)
+  }
+
+
 
 function copyToClipboard(text) {
     if (window.clipboardData && window.clipboardData.setData) {
@@ -75,9 +97,34 @@ function alertFunction(theData){
 
     }else{
         copyToClipboard(theData)
+        document.getElementById('pixelData').textContent = theData + "  *Copied*"
         alert("Copied to clipboard\n" + theData)
     }
     
+}
+
+function RGBAToHexA(r,g,b,a) {
+    r = r.toString(16);
+    g = g.toString(16);
+    b = b.toString(16);
+    a = Math.round(a * 255).toString(16);
+  
+    if (r.length == 1)
+      r = "0" + r;
+    if (g.length == 1)
+      g = "0" + g;
+    if (b.length == 1)
+      b = "0" + b;
+    if (a.length == 1)
+      a = "0" + a;
+  
+    return "#" + r + g + b + a;
+  }
+
+function getPixelData(x, y){
+    let color = "rgba(" + imageData[((imageWidth*y*4) + x*4)] + ", " + imageData[((imageWidth*y*4) + x*4)+1] + ", " + imageData[((imageWidth*y*4) + x*4)+2] + ", " + (parseInt(imageData[((imageWidth*y*4) + x*4)+3])/255).toFixed(2) + ")"
+
+    document.getElementById('pixelData').textContent = color 
 }
 
 function myFunction(color){
@@ -86,7 +133,8 @@ function myFunction(color){
         copyToClipboard(color[0])
         alert("Copied to clipboard\n" + color[0])
     }else{
-        copyToClipboard(color[0])
+        //copyToClipboard(color[0])
+        
         //alert("Copied to clipboard\n" + color[0])
         document.getElementById("zoomBox").innerHTML = ""
         let yCord = imageWidth*4
@@ -123,88 +171,80 @@ function myFunction(color){
 
 
 function swapFunctionR(){
-    var tempSwap = prompt("Use RED channel as src image?\n      (Y, N)")
-    if(tempSwap == "Y" || tempSwap == "y"){
-            imageSelection = 0
-            actual = 1
-            var img = document.getElementById('myImg')
-            img.src = imageArray[imageSelection].src
-            imgSrc = img.src
-            lastSRC = img.src
-            img.onload = imageIsLoaded
-    }
+    //var tempSwap = prompt("Use RED channel as src image?\n      (Y, N)")
+    if (window.confirm("Use RED channel as src image?")) { 
+        imageSelection = 0
+        actual = 1
+        var img = document.getElementById('myImg')
+        img.src = imageArray[imageSelection].src
+        imgSrc = img.src
+        lastSRC = img.src
+        img.onload = imageIsLoaded
+      }
 }
 
 function swapFunctionG(){
-    var tempSwap = prompt("Use GREEN channel as src image?\n      (Y, N)")
-    if(tempSwap == "Y" || tempSwap == "y"){
-            imageSelection = 1
-            actual = 1
-            var img = document.getElementById('myImg')
-            img.src = imageArray[imageSelection].src
-            imgSrc = img.src
-            lastSRC = img.src
-            img.onload = imageIsLoaded
-    }
+    if (window.confirm("Use GREEN channel as src image?")) { 
+        imageSelection = 1
+        actual = 1
+        var img = document.getElementById('myImg')
+        img.src = imageArray[imageSelection].src
+        imgSrc = img.src
+        lastSRC = img.src
+        img.onload = imageIsLoaded
+      }
 }
 
 function swapFunctionB(){
-    var tempSwap = prompt("Use BLUE channel as src image?\n      (Y, N)")
-    if(tempSwap == "Y" || tempSwap == "y"){
-            imageSelection = 2
-            actual = 1
-            var img = document.getElementById('myImg')
-            img.src = imageArray[imageSelection].src
-            imgSrc = img.src
-            lastSRC = img.src
-            img.onload = imageIsLoaded
-    }
+    if (window.confirm("Use BLUE channel as src image?")) { 
+        imageSelection = 2
+        actual = 1
+        var img = document.getElementById('myImg')
+        img.src = imageArray[imageSelection].src
+        imgSrc = img.src
+        lastSRC = img.src
+        img.onload = imageIsLoaded
+      }
 }
 
 function swapFunctionGR(){
-    var tempSwap = prompt("Use Gray Image as src image?\n      (Y, N)")
-    if(tempSwap == "Y" || tempSwap == "y"){
-            imageSelection = 3
-            actual = 1
-            var img = document.getElementById('myImg')
-            img.src = imageArray[imageSelection].src
-            imgSrc = img.src
-            lastSRC = img.src
-            img.onload = imageIsLoaded
-    }
+    if (window.confirm("Use GRAY image as src image?")) { 
+        imageSelection = 3
+        actual = 1
+        var img = document.getElementById('myImg')
+        img.src = imageArray[imageSelection].src
+        imgSrc = img.src
+        lastSRC = img.src
+        img.onload = imageIsLoaded
+      }
 }
 
 function swapFunctionNeg(){
-    var tempSwap = prompt("Use Negative Image as src image?\n      (Y, N)")
-    if(tempSwap == "Y" || tempSwap == "y"){
-            imageSelection = 4
-            actual = 1
-            var img = document.getElementById('myImg')
-            img.src = imageArray[imageSelection].src
-            imgSrc = img.src
-            lastSRC = img.src
-            img.onload = imageIsLoaded    
-    }
+    if (window.confirm("Use NEGATIVE image as src image?")) { 
+        imageSelection = 4
+        actual = 1
+        var img = document.getElementById('myImg')
+        img.src = imageArray[imageSelection].src
+        imgSrc = img.src
+        lastSRC = img.src
+        img.onload = imageIsLoaded
+      }
 }
 
 function removeFunction() {
+    actual = 1
     document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
-    document.getElementById('theBox').style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
-
     document.getElementById('scaleSize').style.display = 'none'
     document.getElementById('titleLabel').textContent = "Pixel Junkie"
     canvasR.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
     canvasG.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
     canvasB.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
     canvasGR.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
-    canvasNeg.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
-    actual = 1
+    canvasNeg.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
+    canvasCore.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
-    document.getElementById("theBox").innerHTML = ""
     document.getElementById("zoomBox").innerHTML = ""
-    document.getElementById('theBox').style.width = 1
-    document.getElementById('theBox').style.height = 1
     document.getElementById("zoomBox").innerHTML = ""
     contextR.clearRect(0, 0, canvasR.width, canvasR.height);
     contextG.clearRect(0, 0, canvasG.width, canvasG.height);
@@ -212,10 +252,10 @@ function removeFunction() {
     contextGR.clearRect(0, 0, canvasGR.width, canvasGR.height);
     contextNeg.clearRect(0, 0, canvasNeg.width, canvasNeg.height);
     ctx.clearRect(0, 0, canvasD.width, canvasD.height);
+    contextCore.clearRect(0, 0, canvasCore.width, canvasCore.height)
 }
 
 function setSize(){
-    document.getElementById("theBox").innerHTML = ""
     let tempVar = ""
     tempVar = prompt("Increase image scale by: (Number >= 1)\nBrowser limitations may not allow downloads of images scaled over 250,000,000px", "0")
     if (tempVar == 0 || tempVar == null || tempVar == "0"){
@@ -243,7 +283,6 @@ function setSize(){
 }
 
 function startImage() {
-	document.getElementById("theBox").innerHTML = "";
     setupRGB();
     document.getElementById('titleLabel').classList.add('rainbow');
     temporaryBox.innerHTML = ""
@@ -255,19 +294,10 @@ function imageWork(height){
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
     let theHeight = height;
     let theWidth = 0;
-    let theBox = document.getElementById('theBox');
-    theBox.style.height = imageHeight*actual + "px";
-    theBox.style.width = imageWidth*actual + "px";
     let iterations = 0;
     for(let i = 0; i < imageWidth; ++i) {
     	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
-        let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-        let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        theTitle.textContent = color;
-        rect.setAttributeNS(null, 'x', theWidth);
-        rect.setAttributeNS(null, 'y', height*actual);
-        rect.setAttributeNS(null, 'height', size);
         let check = 1;
         let rVal = imageData[n];
         let gVal = imageData[n+1];
@@ -305,19 +335,10 @@ function imageWork(height){
             contextNeg.fillStyle = neg;
             contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         }
-
         ctx.fillStyle = color;
         ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
-        let temp = height;
-        let temp2 = i;
-        rect.onclick = function(){
-            myFunction([color, temp, temp2-(Math.ceil(check/2))])
-        }
-        rect.setAttributeNS(null, 'width', check*actual);
-        rect.setAttributeNS(null, 'fill', color);
-        rect.appendChild(theTitle);
-        temporaryBox.appendChild(rect)
-        //theBox.appendChild(rect);
+        contextCore.fillStyle = color;
+        contextCore.fillRect(oldTheWidth, height*actual , check*actual, actual);
         theWidth += actual;
     }
     if (height + 1 < imageHeight) {
@@ -331,11 +352,9 @@ function imageWork(height){
     	});
     }else{
         document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'white');
-        document.getElementById('theBox').style.setProperty('--box-shadow-color', 'white');
         downloadHref = canvasD.toDataURL('image/png');
         document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete."
         document.getElementById('titleLabel').classList.remove('rainbow'); 
-        theBox.appendChild(temporaryBox)
         let tempImageR = new Image()
         tempImageR.src = canvasR.toDataURL()
         imageArray.push(tempImageR)
@@ -361,7 +380,21 @@ function imageWork(height){
 
 function setupRGB(){
     
-
+    canvasCore = document.getElementById('coreImg');
+    canvasCore.height = imageHeight*actual
+    canvasCore.width = imageWidth*actual
+    contextCore = canvasCore.getContext('2d');
+    canvasCore.style.setProperty('--box-shadow-color', 'white');
+    if(firstSetup){
+        canvasCore.addEventListener('mousedown', function(e) {
+            getCursorPosition(canvasCore, e)
+        })
+        canvasCore.addEventListener('mousemove', function(evt) {
+            getMousePos(canvasCore, evt);
+        
+          }, false);
+        firstSetup = false
+    }
     canvasR = document.getElementById('redImg');
     canvasR.height = imageHeight
     canvasR.width = imageWidth
@@ -374,13 +407,11 @@ function setupRGB(){
     contextG = canvasG.getContext('2d');
     canvasG.style.setProperty('--box-shadow-color', 'green');
 
-
     canvasB = document.getElementById('blueImg');
     canvasB.height = imageHeight
     canvasB.width = imageWidth
     contextB = canvasB.getContext('2d');
     canvasB.style.setProperty('--box-shadow-color', 'blue');
-
 
     canvasGR = document.getElementById('grayImg');
     canvasGR.height = imageHeight
@@ -388,13 +419,11 @@ function setupRGB(){
     contextGR = canvasGR.getContext('2d');
     canvasGR.style.setProperty('--box-shadow-color', 'gray');
 
-
     canvasNeg = document.getElementById('negImg');
     canvasNeg.height = imageHeight
     canvasNeg.width = imageWidth
     contextNeg = canvasNeg.getContext('2d');
     canvasNeg.style.setProperty('--box-shadow-color', 'white');
-
 
     canvasD = document.createElement('canvas')
     canvasD.height = imageHeight*actual
@@ -420,6 +449,7 @@ function imageIsLoaded(e) {
         context = canvas.getContext('2d');
         img.src = imageCopy.src;
         context.drawImage(img, 0, 0)
+        
         var performance = window.performance;
         var t0 = performance.now();
         startImage();

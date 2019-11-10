@@ -1,6 +1,6 @@
 html {
     height: auto;
-    width: 200%;
+    width: auto;
  }
 body {
     height: 100%;
@@ -24,6 +24,9 @@ div{
 h1{
   font-family: 'VT323', monospace;
 }
+h2{
+  font-family: 'VT323', monospace;
+}
 img {
   border-color: gray;
   border:4px solid gray;
@@ -35,6 +38,9 @@ canvas {
   box-shadow: var(--box-shadow-color) 0 0 10px 10px;
 }
 
+.coreImage {
+  padding-left: 440px;
+}
 
 
 .rainbow {
