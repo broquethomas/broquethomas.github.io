@@ -4,7 +4,7 @@ let imageWidth = 0;
 let imageCopy = new Image();
 let imageData;
 let canvas, context;
-let canvasR, canvasG, canvasB, canvasGR, canvasNeg, canvasCore, contextR, contextG, contextB, contextGR, contextNeg, contextCore
+let canvasR, canvasG, canvasB, canvasGR, canvasNeg, canvasCore, canvasHist, contextR, contextG, contextB, contextGR, contextNeg, contextCore, contextHist
 let lastSRC = ""
 let img = new Image();
 let actual = 1
@@ -18,6 +18,8 @@ let imageArray = []
 let imageSelection = 0
 let downloadHref = ""
 let firstSetup = true
+let LSC = ""
+let RGBCount = [[],[],[]]
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -42,6 +44,7 @@ function setSidePixel(color){
     rectNew.setAttributeNS(null, 'y', 0);
     rectNew.setAttributeNS(null, 'height', '100px');
     rectNew.setAttributeNS(null, 'width', '100px');
+    rectNew.setAttributeNS(null, 'rx', 15);
     rectNew.setAttributeNS(null, 'fill', color);
     rectNew.appendChild(theTitle)
     document.getElementById('colorRepresentation').appendChild(rectNew)
@@ -52,12 +55,11 @@ function getCursorPosition(canvasIn, event) {
     const rect = canvasIn.getBoundingClientRect()
     const x = Math.floor((event.clientX - rect.left)/actual)
     const y = Math.floor((event.clientY - rect.top)/actual)
-    let color = "rgba(" + imageData[((imageWidth*y*4) + x*4)] + ", " + imageData[((imageWidth*y*4) + x*4)+1] + ", " + imageData[((imageWidth*y*4) + x*4)+2] + ", " + (parseInt(imageData[((imageWidth*y*4) + x*4)+3])/255).toFixed(2) + ")"
+    //let color = "rgba(" + imageData[((imageWidth*y*4) + x*4)] + ", " + imageData[((imageWidth*y*4) + x*4)+1] + ", " + imageData[((imageWidth*y*4) + x*4)+2] + ", " + (parseInt(imageData[((imageWidth*y*4) + x*4)+3])/255).toFixed(2) + ")"
     //console.log("x: " + x + " y: " + y)
-    document.getElementById('pixelData').textContent = color + " *Copied to clipboard*"
-    setSidePixel(color)
-    copyToClipboard(color)
-    
+    document.getElementById('pixelData').textContent = LSC + " *Copied to clipboard*"
+    setSidePixel(LSC)
+    copyToClipboard(LSC)
     myFunction(["jib", y, x])
 }
 
@@ -140,19 +142,24 @@ function RGBAToHexA(r,g,b,a) {
   }
 
 function getPixelData(x, y){
-    document.getElementById('colorRepresentation').innerHTML = ""
     let color = "rgba(" + imageData[((imageWidth*y*4) + x*4)] + ", " + imageData[((imageWidth*y*4) + x*4)+1] + ", " + imageData[((imageWidth*y*4) + x*4)+2] + ", " + (parseInt(imageData[((imageWidth*y*4) + x*4)+3])/255).toFixed(2) + ")"
-    let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-    let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-    theTitle.textContent = color
-    rect.setAttributeNS(null, 'x', 0);
-    rect.setAttributeNS(null, 'y', 0);
-    rect.setAttributeNS(null, 'height', '100px');
-    rect.setAttributeNS(null, 'width', '100px');
-    rect.setAttributeNS(null, 'fill', color);
-    rect.appendChild(theTitle)
-    document.getElementById('colorRepresentation').appendChild(rect)
-    document.getElementById('pixelData').textContent = color 
+    if(color != "rgba(undefined, undefined, undefined, NaN)"){
+        LSC = color
+        document.getElementById('colorRepresentation').innerHTML = ""
+        let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+        let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        theTitle.textContent = color
+        rect.setAttributeNS(null, 'x', 0);
+        rect.setAttributeNS(null, 'y', 0);
+        rect.setAttributeNS(null, 'height', '100px');
+        rect.setAttributeNS(null, 'width', '100px');
+        rect.setAttributeNS(null, 'rx', 15);
+        rect.setAttributeNS(null, 'fill', color);
+        rect.appendChild(theTitle)
+        document.getElementById('colorRepresentation').appendChild(rect)
+        document.getElementById('pixelData').textContent = color 
+    }
+    
 }
 
 function myFunction(color){
@@ -261,6 +268,8 @@ function swapFunctionNeg(){
 
 function removeFunction() {
     actual = 1
+    document.getElementById('rgbHeader').textContent = ""
+
     document.getElementById('colorRepresentation').innerHTML = ""
     document.getElementById('pixelData').textContent = ""
     document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
@@ -328,10 +337,14 @@ function startImage() {
     setupRGB();
     document.getElementById('titleLabel').classList.add('rainbow');
     temporaryBox.innerHTML = ""
+    document.getElementById('rgbHeader').textContent = "*RGB Data*  " + (imageWidth*actual) + "x" + (imageHeight*actual) + "px image."
     imageWork(0);
     document.getElementById('scaleSize').style.display = 'block'
 }
 
+function histogramHelper(rgbData){
+    
+}
 function imageWork(height){
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
     let theHeight = height;
@@ -360,6 +373,7 @@ function imageWork(height){
         contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextNeg.fillStyle = neg;
         contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
+
         let oldTheWidth = theWidth;
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
             i++;
@@ -377,6 +391,12 @@ function imageWork(height){
             contextNeg.fillStyle = neg;
             contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         }
+        for(rgbCheck = 0; rgbCheck < check; rgbCheck += 1){
+            RGBCount[0].push(rVal)
+            RGBCount[1].push(gVal)
+            RGBCount[2].push(bVal)
+        }
+
         ctx.fillStyle = color;
         ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
         contextCore.fillStyle = color;
@@ -390,9 +410,16 @@ function imageWork(height){
             }else{
                 document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
             }
+            RGBCount[0].push([])
+            RGBCount[1].push([])
+            RGBCount[2].push([])
     		imageWork(height + 1);
     	});
     }else{
+        for(rgbSCheck = 0; rgbSCheck < 3; rgbSCheck += 1){
+            var temp = RGBCount[rgbSCheck].sort((a, b) => a - b);
+            RGBCount[rgbSCheck] = temp
+        }
         document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'white');
         downloadHref = canvasD.toDataURL('image/png');
         document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete."
@@ -437,6 +464,12 @@ function setupRGB(){
           }, false);
         firstSetup = false
     }
+
+    canvasHist = document.getElementById('redImg');
+    canvasHist.height = 800
+    canvasHist.width = 1020
+    contextHist = canvasHist.getContext('2d');
+
     canvasR = document.getElementById('redImg');
     canvasR.height = imageHeight
     canvasR.width = imageWidth
@@ -474,12 +507,8 @@ function setupRGB(){
 }
 
 function imageIsLoaded(e) { 
-    if (this.width*this.height > 1000000 || this.width*this.height < 225){
-        if (this.width*this.height > 1000000 ){
-            alert("I don't want that many pixels, keep it under 1,000,000px")
-        }else{
-            alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
-        }
+    if (this.width*this.height < 225){
+        alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
     }else{
         imageArray = []
         imageCopy.src = this.src
@@ -491,10 +520,14 @@ function imageIsLoaded(e) {
         context = canvas.getContext('2d');
         img.src = imageCopy.src;
         context.drawImage(img, 0, 0)
-        
+        document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
         var performance = window.performance;
         var t0 = performance.now();
+        document.getElementById('pixelData').textContent = "rgba(000, 000, 000, 1.00)"
+        document.getElementById('rgbHeader').textContent = "*RGB Data*  " + (imageWidth*actual) + "x" + (imageHeight*actual) + "px image."
         startImage();
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         var t1 = performance.now();
         console.log("Call to doWork took " + (t1 - t0) + " milliseconds.")
     }

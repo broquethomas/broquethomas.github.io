@@ -24,15 +24,13 @@
             <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
             <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/>
             <svg id='colorRepresentation' style="height: 100px; width: 100px; background-color: rgb(51, 51, 51); display:inline" ></svg>
-            <h2 id="pixelData" style='color:white; font-size: 2em; width: 100%;
-            background-color: dimgray;
-            padding-left: 10px; display: inline;'></h2>
+            <h2 id="pixelData" style='color:white; font-size: 2em; width: 100%; background-color: dimgray; padding-left: 10px; display: inline;'></h2>
         </div>
         <span>
-                <h1 id="scaleSize" style='color:white; display: none;'>Current Scale: 1px == 1px</h1>
+            <h1 id="scaleSize" style='color:white; display: none;'>Current Scale: 1px == 1px</h1>            <p id='rgbHeader' style='position:relative;left: 450px;font-family: VT323, monospace;font-size: 2em; display: inline;'></p>
+
         </span>
         <div>
-            <br>
             <svg style='float:left; position:fixed; height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg); z-index: 99' id='zoomBox'></svg>
             <canvas id='coreImg' class='coreImg' style='position:relative;left: 440px'src="#" alt=""></canvas>
         </div>
@@ -46,6 +44,7 @@
                 <br>
                 <canvas id='grayImg' src="#" alt="" onclick="swapFunctionGR();"></canvas>
                 <canvas id='negImg' src="#" alt="" onclick="swapFunctionNeg();"></canvas>
+                <canvas id='histogram' src="#" alt=""></canvas>
         </div>
     </div>
 
