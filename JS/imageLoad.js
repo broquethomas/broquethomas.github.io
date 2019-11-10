@@ -122,8 +122,18 @@ function RGBAToHexA(r,g,b,a) {
   }
 
 function getPixelData(x, y){
+    document.getElementById('colorRepresentation').innerHTML = ""
     let color = "rgba(" + imageData[((imageWidth*y*4) + x*4)] + ", " + imageData[((imageWidth*y*4) + x*4)+1] + ", " + imageData[((imageWidth*y*4) + x*4)+2] + ", " + (parseInt(imageData[((imageWidth*y*4) + x*4)+3])/255).toFixed(2) + ")"
-
+    let rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+    let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+    theTitle.textContent = color
+    rect.setAttributeNS(null, 'x', 0);
+    rect.setAttributeNS(null, 'y', 0);
+    rect.setAttributeNS(null, 'height', '100px');
+    rect.setAttributeNS(null, 'width', '100px');
+    rect.setAttributeNS(null, 'fill', color);
+    rect.appendChild(theTitle)
+    document.getElementById('colorRepresentation').appendChild(rect)
     document.getElementById('pixelData').textContent = color 
 }
 
