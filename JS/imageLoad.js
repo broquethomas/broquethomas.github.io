@@ -417,8 +417,9 @@ function imageWork(height){
     	});
     }else{
         for(rgbSCheck = 0; rgbSCheck < 3; rgbSCheck += 1){
-            var temp = RGBCount[rgbSCheck].sort((a, b) => a - b);
-            RGBCount[rgbSCheck] = temp
+            //Histogram stuff
+            //var temp = RGBCount[rgbSCheck].sort((a, b) => a - b);
+            //RGBCount[rgbSCheck] = temp
         }
         document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'white');
         downloadHref = canvasD.toDataURL('image/png');
