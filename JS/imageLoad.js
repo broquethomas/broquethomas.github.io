@@ -33,14 +33,31 @@ window.addEventListener('load', function() {
     });
 });
 
+function setSidePixel(color){
+    document.getElementById('colorRepresentation').innerHTML = ""
+    let rectNew = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+    let theTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+    theTitle.textContent = color
+    rectNew.setAttributeNS(null, 'x', 0);
+    rectNew.setAttributeNS(null, 'y', 0);
+    rectNew.setAttributeNS(null, 'height', '100px');
+    rectNew.setAttributeNS(null, 'width', '100px');
+    rectNew.setAttributeNS(null, 'fill', color);
+    rectNew.appendChild(theTitle)
+    document.getElementById('colorRepresentation').appendChild(rectNew)
+}
+
 function getCursorPosition(canvasIn, event) {
+    
     const rect = canvasIn.getBoundingClientRect()
     const x = Math.floor((event.clientX - rect.left)/actual)
     const y = Math.floor((event.clientY - rect.top)/actual)
     let color = "rgba(" + imageData[((imageWidth*y*4) + x*4)] + ", " + imageData[((imageWidth*y*4) + x*4)+1] + ", " + imageData[((imageWidth*y*4) + x*4)+2] + ", " + (parseInt(imageData[((imageWidth*y*4) + x*4)+3])/255).toFixed(2) + ")"
     //console.log("x: " + x + " y: " + y)
     document.getElementById('pixelData').textContent = color + " *Copied to clipboard*"
+    setSidePixel(color)
     copyToClipboard(color)
+    
     myFunction(["jib", y, x])
 }
 
@@ -97,6 +114,7 @@ function alertFunction(theData){
 
     }else{
         copyToClipboard(theData)
+        setSidePixel(theData)
         document.getElementById('pixelData').textContent = theData + "  *Copied*"
         alert("Copied to clipboard\n" + theData)
     }
@@ -243,6 +261,8 @@ function swapFunctionNeg(){
 
 function removeFunction() {
     actual = 1
+    document.getElementById('colorRepresentation').innerHTML = ""
+    document.getElementById('pixelData').textContent = ""
     document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
     document.getElementById('scaleSize').style.display = 'none'
     document.getElementById('titleLabel').textContent = "Pixel Junkie"
@@ -263,6 +283,18 @@ function removeFunction() {
     contextNeg.clearRect(0, 0, canvasNeg.width, canvasNeg.height);
     ctx.clearRect(0, 0, canvasD.width, canvasD.height);
     contextCore.clearRect(0, 0, canvasCore.width, canvasCore.height)
+    canvasCore.height = 0
+    canvasCore.width = 0
+    canvasR.height = 0
+    canvasR.width = 0
+    canvasG.height = 0
+    canvasG.width = 0
+    canvasB.height = 0
+    canvasB.width = 0
+    canvasGR.height = 0
+    canvasGR.width = 0
+    canvasNeg.height = 0
+    canvasNeg.width = 0
 }
 
 function setSize(){
