@@ -43,8 +43,8 @@ function setSidePixel(color){
     theTitle.textContent = color
     rectNew.setAttributeNS(null, 'x', 0);
     rectNew.setAttributeNS(null, 'y', 0);
-    rectNew.setAttributeNS(null, 'height', '50px');
-    rectNew.setAttributeNS(null, 'width', '50px');
+    rectNew.setAttributeNS(null, 'height', '100px');
+    rectNew.setAttributeNS(null, 'width', '100%');
     rectNew.setAttributeNS(null, 'rx', 15);
     rectNew.setAttributeNS(null, 'fill', color);
     rectNew.appendChild(theTitle)
@@ -152,8 +152,8 @@ function getPixelData(x, y){
         theTitle.textContent = color
         rect.setAttributeNS(null, 'x', 0);
         rect.setAttributeNS(null, 'y', 0);
-        rect.setAttributeNS(null, 'height', '50px');
-        rect.setAttributeNS(null, 'width', '50px');
+        rect.setAttributeNS(null, 'height', '100px');
+        rect.setAttributeNS(null, 'width', '100%');
         rect.setAttributeNS(null, 'rx', 15);
         rect.setAttributeNS(null, 'fill', color);
         rect.appendChild(theTitle)

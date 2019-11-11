@@ -17,17 +17,36 @@
             padding-left: 10px;'>
                 Pixel Junkie
             </h1>
+            <input class='button medium-btn' type="button" value="Reading Material" onclick="window.location.href = '#open-modal';" style="display: inline;"/>
+            <div id="open-modal" class="modal-window">
+                <div>
+                    <a href="#modal-close" title="Close" class="modal-close">close &times;</a>
+                    
+                    <h2 style="font-size: 4em;">Junkie's Menu:</h2>
+                <div>
+                    <p >(Upon uploading an image)</p>
+                    <h1 style="font-size: 1.5em;">> 1. Scale image to your choosing.</h1> 
+                    <h1 style="font-size: 1.5em;">> 2. Locate exact color data within images easily.</h1>
+                    <h1 style="font-size: 1.5em;">> 3. Extract Red Color Data into unique image.</h1>
+                    <h1 style="font-size: 1.5em;">> 4. Extract Green Color Data into unique image.</h1>
+                    <h1 style="font-size: 1.5em;">> 5. Extract Blue Color Data into unique image.</h1>
+                    <h1 style="font-size: 1.5em;">> 6. Convert image into Grayscale image.</h1>
+                    <h1 style="font-size: 1.5em;">> 7. Convert image into Negative image.</h1>
+                </div>
+                </div>
+            </div>
             <h1 style='color:white;'>Pixels are back on the menu, boys.</h1>             
         <div>
             <input  class='button big-btn' type='file' />
             <input id="clickMe" class='button medium-btn' type="button" value="Destroy The Pixels" onclick="removeFunction();"/>
             <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
-            <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/>
-            <svg id='colorRepresentation' style="height: 50px; width: 50px; background-color: rgb(51, 51, 51); display:inline" ></svg>
-            <h2 id="pixelData" style='color:white; font-size: 2em; width: 100%; background-color: dimgray; padding-left: 10px; display: inline;'></h2>
+            <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/><br>
+            <svg id='colorRepresentation' style="height: 100px; width: 100px; background-color: rgb(51, 51, 51)" ></svg>
+            <h2 id="pixelData" style='margin-left: 20px;color:white; font-size: 2em; width: 100%; background-color: dimgray; padding-left: 10px;'></h2>
         </div>
         <span>
-            <h1 id="scaleSize" style='color:white; display: none;'>Current Scale: 1px == 1px</h1>            <p id='rgbHeader' style='position:relative;left: 50px;font-family: VT323, monospace;font-size: 2em; display: inline;'></p>
+            <h1 id="scaleSize" style='color:white;'>Current Scale: 1px == 1px</h1>            
+            <p id='rgbHeader' style='margin-left: 440px;font-family: VT323, monospace;font-size: 2em; display: inline;'></p>
 
         </span>
 
