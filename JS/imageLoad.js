@@ -20,6 +20,7 @@ let downloadHref = ""
 let firstSetup = true
 let LSC = ""
 let RGBCount = [[],[],[]]
+let doIt = false
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -404,17 +405,22 @@ function imageWork(height){
         theWidth += actual;
     }
     if (height + 1 < imageHeight) {
-    	window.requestAnimationFrame(function() {
-            if(parseInt(((height+1) / imageHeight)*100) == 99){
-                document.getElementById('titleLabel').textContent = "Pixel Junkie --> Rendering Image"
-            }else{
-                document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
-            }
-            RGBCount[0].push([])
-            RGBCount[1].push([])
-            RGBCount[2].push([])
-    		imageWork(height + 1);
-    	});
+        if(doIt){
+            imageWork(height + 1);
+        }else{
+            window.requestAnimationFrame(function() {
+                if(parseInt(((height+1) / imageHeight)*100) == 99){
+                    document.getElementById('titleLabel').textContent = "Pixel Junkie --> Rendering Image"
+                }else{
+                    document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing Image: " + parseInt(((height+1) / imageHeight)*100) + "% complete."
+                }
+                //RGBCount[0].push([])
+                //RGBCount[1].push([])
+                //RGBCount[2].push([])
+                imageWork(height + 1);
+            });        
+        }
+    	
     }else{
         for(rgbSCheck = 0; rgbSCheck < 3; rgbSCheck += 1){
             //Histogram stuff
@@ -499,7 +505,7 @@ function setupRGB(){
     canvasNeg.height = imageHeight
     canvasNeg.width = imageWidth
     contextNeg = canvasNeg.getContext('2d');
-    canvasNeg.style.setProperty('--box-shadow-color', 'white');
+    canvasNeg.style.setProperty('--box-shadow-color', 'black');
 
     canvasD = document.createElement('canvas')
     canvasD.height = imageHeight*actual

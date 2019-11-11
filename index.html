@@ -17,26 +17,30 @@
             padding-left: 10px;'>
                 Pixel Junkie
             </h1>
-            <h1 style='color:white'>Upload your image.   (Larger images take considerably longer) </h1>        
+            <h1 style='color:white;'>Your image upload == Easily obtain RGBA data, Split image into color channels / Grayscale / Negative, Image Up-scale.</h1>             <img style='float:left;height: 100; width: 200;z-index: 1; display: inline;'src="help.png">
+       
         <div>
             <input  class='button big-btn' type='file' />
             <input id="clickMe" class='button medium-btn' type="button" value="Destroy The Pixels" onclick="removeFunction();"/>
             <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
             <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/>
             <svg id='colorRepresentation' style="height: 100px; width: 100px; background-color: rgb(51, 51, 51); display:inline" ></svg>
-            <h2 id="pixelData" style='color:white; font-size: 2em; width: 100%; background-color: dimgray; padding-left: 10px; display: inline;'></h2>
+            <h2 id="pixelData" style='color:white; font-size: 1.25em; width: 100%; background-color: dimgray; padding-left: 10px; display: inline;'></h2>
         </div>
         <span>
-            <h1 id="scaleSize" style='color:white; display: none;'>Current Scale: 1px == 1px</h1>            <p id='rgbHeader' style='position:relative;left: 450px;font-family: VT323, monospace;font-size: 2em; display: inline;'></p>
+            <h1 id="scaleSize" style='color:white; display: none;'>Current Scale: 1px == 1px</h1>            <p id='rgbHeader' style='position:relative;left: 50px;font-family: VT323, monospace;font-size: 2em; display: inline;'></p>
 
         </span>
+
         <div>
             <svg style='float:left; position:fixed; height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg); z-index: 99' id='zoomBox'></svg>
             <canvas id='coreImg' class='coreImg' style='position:relative;left: 440px'src="#" alt=""></canvas>
         </div>
         <div class='containerBorder' style ='position:relative; left: 440px'id="divheight">
                 <br>
-                <img id="myImg" src="#" alt="">
+                <img id="myImg" style='border-color: gray;
+                border:4px solid gray;
+                margin: 10px;'src="#" alt="">
                 <canvas id='redImg' src="#" alt="" onclick="swapFunctionR();"></canvas>
                 <br>
                 <canvas id='greenImg' src="#" alt="" onclick="swapFunctionG();"></canvas>
