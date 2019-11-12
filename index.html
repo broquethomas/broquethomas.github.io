@@ -16,12 +16,17 @@
             padding-left: 10px;'>
                 Pixel Junkie
             </h1>
-            <h1 style='color:white;'>Pixels are back on the menu, boys.</h1>             
+            <div>
+                <h1 style='color:white; display: inline;'>Pixels are back on the menu, boys. </h1>
+                <h1 style='color:white; margin-left: 400px; display: inline;'> Binary Threshold:</h1>               
+                <input id='threshold' type="text" name="Binary Threshold" placeholder="(0-254)  Default: 127" class='button medium-btn'style='color:white;background-color:black;display: inline;'>
+            </div>
+            
         <div>
             <h2 id='uploadLabel' style="display: inline; color:white;">C'mon, just upload your image.</h2>
-            <input  class='button big-btn' type='file' />
+            <input  class='button medium-btn' type='file' />
             <input id="clickMe" class='button medium-btn' type="button" value="Destroy The Pixels" onclick="removeFunction();"/>
-            <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
+            <input id="setScale"  class='button medium-btn' type="button" value="Rebuild / Up-scale Image" onclick="setSize();"/>
             <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Canvas Image" onclick="saveCanvasImg();"/>
             <input class='button medium-btn' type="button" value="Help Menu" onclick="window.location.href = '#open-modal';" style="display: inline;"/>
             <div id="open-modal" class="modal-window">
@@ -37,13 +42,13 @@
                     <h1 style="font-size: 1.5em;">> 5. Extract Blue Color Data into unique image.</h1>
                     <h1 style="font-size: 1.5em;">> 6. Convert image into Grayscale image.</h1>
                     <h1 style="font-size: 1.5em;">> 7. Convert image into Negative image.</h1>
-                    <h1 style="font-size: 1.5em;">> 8. Convert image into Binary Mask.</h1>
+                    <h1 style="font-size: 1.5em;">> 8. Convert image into Binary Mask. (Optional Threshold)</h1>
 
                 </div>
                 </div>
             </div>
             <div>
-                    <h1 id="scaleSize" style='color:white;'>Current Scale: 1px == 1px</h1>            
+                    <h1 id="scaleSize" style='color:white;'></h1>            
              </div>
            </div>
         <div style="width: 100%;">

@@ -281,6 +281,7 @@ function swapFunctionBin(){
 
 function removeFunction() {
     actual = 1
+    document.getElementById('threshold').value = ""
     document.getElementById('rgbHeader').textContent = ""
     document.getElementById('uploadLabel').textContent = "C'mon, just upload your image."
     document.getElementById('colorRepresentation').innerHTML = ""
@@ -324,7 +325,7 @@ function removeFunction() {
 
 function setSize(){
     let tempVar = ""
-    tempVar = prompt("Increase image scale by: (Number >= 1)\nBrowser limitations may not allow downloads of images scaled over 250,000,000px", "0")
+    tempVar = prompt("Increase image scale by: (1: Rebuild Image) or (Number > 1)  \nBrowser limitations may not allow downloads of images scaled over 250,000,000px", "1")
     if (tempVar == 0 || tempVar == null || tempVar == "0"){
 
     }else{
@@ -378,6 +379,10 @@ function histogramHelper(rgbData){
     
 }
 function imageWork(height){
+    let threshold = parseInt(document.getElementById('threshold').value)
+    if(isNaN(threshold)){
+        threshold = 127
+    }
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
     let theHeight = height;
     let theWidth = 0;
@@ -391,7 +396,7 @@ function imageWork(height){
         let bVal = imageData[n+2];
         var average = parseInt((rVal+gVal+bVal)/3);
         let binaryVal = 0
-        if(average > 127){
+        if(average > threshold){
             binaryVal = 255
         }else{
             binaryVal = 0
@@ -573,7 +578,8 @@ function imageIsLoaded(e) {
     if (this.width*this.height < 225){
         alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
     }else{
-        
+        imgSrc = this.src
+        lastSRC = this.src 
         imageArray = []
         imageCopy.src = this.src
         imageHeight = this.height;
@@ -591,7 +597,9 @@ function imageIsLoaded(e) {
         document.getElementById('rgbHeader').textContent = "*RGB Data*  " + (imageWidth*actual) + "x" + (imageHeight*actual) + "px image."
         startImage();
         document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        document.documentElement.scrollTop = 0;
+        document.body.scrollLeft = 0; // For Chrome, Firefox, IE and Opera
+        document.documentElement.scrollLeft = 0;
         var t1 = performance.now();
         console.log("Call to doWork took " + (t1 - t0) + " milliseconds.")
     }
