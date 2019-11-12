@@ -11,7 +11,6 @@
 </head>
 <body>
     <div style="float: left; width: 100%;">
-        
             <h1 id='titleLabel' style='color:white; font-size: 4em; width: 100%;
             background-color: dimgray;
             padding-left: 10px;'>
@@ -19,7 +18,7 @@
             </h1>
             <h1 style='color:white;'>Pixels are back on the menu, boys.</h1>             
         <div>
-            <h2 style="display: inline; color:white;">Upload your image</h2>
+            <h2 id='uploadLabel' style="display: inline; color:white;">C'mon, just upload your image.</h2>
             <input  class='button big-btn' type='file' />
             <input id="clickMe" class='button medium-btn' type="button" value="Destroy The Pixels" onclick="removeFunction();"/>
             <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
@@ -28,7 +27,7 @@
             <div id="open-modal" class="modal-window">
                 <div>
                     <a href="#modal-close" title="Close" class="modal-close">close &times;</a>
-                    <h2 style="font-size: 4em;">Reading Material:</h2>
+                    <h2 style="font-size: 4em;">*Reading Material*</h2>
                 <div>
                     <p >(Upon uploading an image)</p>
                     <h1 style="font-size: 1.5em;">> 1. Scale image to your choosing.</h1> 
@@ -38,22 +37,22 @@
                     <h1 style="font-size: 1.5em;">> 5. Extract Blue Color Data into unique image.</h1>
                     <h1 style="font-size: 1.5em;">> 6. Convert image into Grayscale image.</h1>
                     <h1 style="font-size: 1.5em;">> 7. Convert image into Negative image.</h1>
+                    <h1 style="font-size: 1.5em;">> 8. Convert image into Binary Mask.</h1>
+
                 </div>
                 </div>
             </div>
             <div>
                     <h1 id="scaleSize" style='color:white;'>Current Scale: 1px == 1px</h1>            
-
              </div>
            </div>
         <div style="width: 100%;">
-                <svg id='colorRepresentation' style="height: 100px; width: 100px;position:fixed; background-color: rgb(51, 51, 51);z-index: 99" ></svg>
+                <svg id='colorRepresentation' style="height: 100px; width: 100px;position:fixed; background-color: rgb(51, 51, 51, 0);z-index: 99" ></svg>
                 <br>
                 <h2 id="pixelData" style='margin-left: 50px;position:fixed;color:white; font-size: 2em; background-color: dimgray; padding-left: 10px; display: inline;z-index: 99; border-radius: 5px;'></h2>
                 <p id='rgbHeader' style='margin-left: 450px; font-family: VT323, monospace;font-size: 2em;'></p>
         </div>
         <div style="width: 100%;">
-            
             <svg style='float:left; position:fixed; height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg); z-index: 99' id='zoomBox'></svg>
             <canvas id='coreImg' class='coreImg' style='position:relative;left: 450px'src="#" alt=""></canvas>
         </div>
@@ -62,13 +61,15 @@
                 <img id="myImg" style='border-color: gray;
                 border:4px solid gray;
                 margin: 10px;'src="#" alt="">
-                <canvas id='redImg' src="#" alt="" onclick="swapFunctionR();"></canvas>
+                <canvas id='redImg' title="Red Channel" src="#" alt="" onclick="swapFunctionR();"></canvas>
                 <br>
-                <canvas id='greenImg' src="#" alt="" onclick="swapFunctionG();"></canvas>
-                <canvas id='blueImg' src="#" alt="" onclick="swapFunctionB();"></canvas>
+                <canvas id='greenImg' title="Green Channel" src="#" alt="" onclick="swapFunctionG();"></canvas>
+                <canvas id='blueImg' title="Blue Channel" src="#" alt="" onclick="swapFunctionB();"></canvas>
                 <br>
-                <canvas id='grayImg' src="#" alt="" onclick="swapFunctionGR();"></canvas>
-                <canvas id='negImg' src="#" alt="" onclick="swapFunctionNeg();"></canvas>
+                <canvas id='grayImg' title="Grayscale Image" src="#" alt="" onclick="swapFunctionGR();"></canvas>
+                <canvas id='negImg' title="Negative Image" src="#" alt="" onclick="swapFunctionNeg();"></canvas>
+                <br>
+                <canvas id='binaryMask' title="Binary Image" src="#" alt="" onclick="swapFunctionBin();"></canvas>
                 <canvas id='histogram' src="#" alt=""></canvas>
         </div>
     </div>

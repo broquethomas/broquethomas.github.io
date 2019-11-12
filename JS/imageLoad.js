@@ -4,7 +4,7 @@ let imageWidth = 0;
 let imageCopy = new Image();
 let imageData;
 let canvas, context;
-let canvasR, canvasG, canvasB, canvasGR, canvasNeg, canvasCore, canvasHist, contextR, contextG, contextB, contextGR, contextNeg, contextCore, contextHist
+let canvasR, canvasG, canvasB, canvasGR, canvasNeg, canvasCore, canvasBinary, canvasHist, contextR, contextG, contextB, contextGR, contextNeg, contextCore, contextBinary, contextHist
 let lastSRC = ""
 let img = new Image();
 let actual = 1
@@ -267,10 +267,22 @@ function swapFunctionNeg(){
       }
 }
 
+function swapFunctionBin(){
+    if (window.confirm("Use Binary image as src image?")) { 
+        imageSelection = 5
+        actual = 1
+        var img = document.getElementById('myImg')
+        img.src = imageArray[imageSelection].src
+        imgSrc = img.src
+        lastSRC = img.src
+        img.onload = imageIsLoaded
+      }
+}
+
 function removeFunction() {
     actual = 1
     document.getElementById('rgbHeader').textContent = ""
-
+    document.getElementById('uploadLabel').textContent = "C'mon, just upload your image."
     document.getElementById('colorRepresentation').innerHTML = ""
     document.getElementById('pixelData').textContent = ""
     document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
@@ -291,6 +303,7 @@ function removeFunction() {
     contextB.clearRect(0, 0, canvasB.width, canvasB.height);
     contextGR.clearRect(0, 0, canvasGR.width, canvasGR.height);
     contextNeg.clearRect(0, 0, canvasNeg.width, canvasNeg.height);
+    contextBinary.clearRect(0, 0, canvasBinary.width, canvasBinary.height)
     ctx.clearRect(0, 0, canvasD.width, canvasD.height);
     contextCore.clearRect(0, 0, canvasCore.width, canvasCore.height)
     canvasCore.height = 0
@@ -305,6 +318,8 @@ function removeFunction() {
     canvasGR.width = 0
     canvasNeg.height = 0
     canvasNeg.width = 0
+    canvasBinary.width = 0
+    canvasBinary.height = 0
 }
 
 function setSize(){
@@ -336,6 +351,22 @@ function setSize(){
 
 function startImage() {
     setupRGB();
+    if(imageHeight*imageWidth < 10000){
+        document.getElementById('uploadLabel').textContent = "Scaling up?"
+    }else if(imageHeight*imageWidth < 50000){
+        document.getElementById('uploadLabel').textContent = "Just a quick one."
+    }else if(imageHeight*imageWidth < 100000){
+        document.getElementById('uploadLabel').textContent = "Okay just a sec, here."
+    }else if(imageHeight*imageWidth < 1000000){
+        document.getElementById('uploadLabel').textContent = "Good pix' pics"
+    }else if(imageHeight*imageWidth < 2000000){
+        document.getElementById('uploadLabel').textContent = "So many pixels, just for me!?."
+    }else if(imageHeight*imageWidth < 4000000){
+        document.getElementById('uploadLabel').textContent = "The pixel density is just marvelous."
+    }else{
+        document.getElementById('uploadLabel').textContent = "I need time to think about what you've done."
+    }
+    
     document.getElementById('titleLabel').classList.add('rainbow');
     temporaryBox.innerHTML = ""
     document.getElementById('rgbHeader').textContent = "*RGB Data*  " + (imageWidth*actual) + "x" + (imageHeight*actual) + "px image."
@@ -359,11 +390,18 @@ function imageWork(height){
         let gVal = imageData[n+1];
         let bVal = imageData[n+2];
         var average = parseInt((rVal+gVal+bVal)/3);
+        let binaryVal = 0
+        if(average > 127){
+            binaryVal = 255
+        }else{
+            binaryVal = 0
+        }
         let r = "rgba(" + rVal + ", " + 0 + ", " + 0 + ", " + 1 + ")";
         let g = "rgba(" + 0 + ", " + gVal + ", " + 0 + ", " + 1 + ")";
         let b = "rgba(" + 0 + ", " + 0 + ", " + bVal + ", " + 1 + ")";
         let neg = "rgba(" + (255-rVal) + ", " + (255-gVal) + ", " + (255-bVal) + ", " + 1 + ")"
         let gr = "rgba(" + average + ", " + average + ", " + average + ", " + 1 + ")";
+        let bV = "rgba(" + binaryVal + ", " + binaryVal + ", " + binaryVal + ", " + 1 + ")";
         contextR.fillStyle = r;
         contextR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextG.fillStyle = g;
@@ -374,6 +412,8 @@ function imageWork(height){
         contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextNeg.fillStyle = neg;
         contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
+        contextBinary.fillStyle = bV;
+        contextBinary.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
 
         let oldTheWidth = theWidth;
         while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
@@ -391,6 +431,8 @@ function imageWork(height){
             contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
             contextNeg.fillStyle = neg;
             contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
+            contextBinary.fillStyle = bV;
+            contextBinary.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         }
         for(rgbCheck = 0; rgbCheck < check; rgbCheck += 1){
             RGBCount[0].push(rVal)
@@ -427,6 +469,7 @@ function imageWork(height){
             //var temp = RGBCount[rgbSCheck].sort((a, b) => a - b);
             //RGBCount[rgbSCheck] = temp
         }
+        document.getElementById('uploadLabel').textContent = "Great, success."
         document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'white');
         downloadHref = canvasD.toDataURL('image/png');
         document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete."
@@ -450,7 +493,13 @@ function imageWork(height){
 
         tempImageNeg.src = canvasNeg.toDataURL()
         imageArray.push(tempImageNeg)
+
+        let tempImageBin = new Image()
+        tempImageBin.src = canvasBinary.toDataURL()
+        imageArray.push(tempImageBin)
         myFunction(["color", Math.floor(imageHeight/2), Math.floor(imageWidth/2)])
+
+        
     }
 }
 
@@ -511,12 +560,20 @@ function setupRGB(){
     canvasD.height = imageHeight*actual
     canvasD.width = imageWidth*actual
     ctx = canvasD.getContext('2d')
+
+    canvasBinary = document.getElementById('binaryMask')
+    canvasBinary.height = imageHeight
+    canvasBinary.width = imageWidth
+    contextBinary = canvasBinary.getContext('2d')
+
+
 }
 
 function imageIsLoaded(e) { 
     if (this.width*this.height < 225){
         alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
     }else{
+        
         imageArray = []
         imageCopy.src = this.src
         imageHeight = this.height;
