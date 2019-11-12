@@ -23,7 +23,7 @@
             <input  class='button big-btn' type='file' />
             <input id="clickMe" class='button medium-btn' type="button" value="Destroy The Pixels" onclick="removeFunction();"/>
             <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
-            <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/>
+            <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Canvas Image" onclick="saveCanvasImg();"/>
             <input class='button medium-btn' type="button" value="Help Menu" onclick="window.location.href = '#open-modal';" style="display: inline;"/>
             <div id="open-modal" class="modal-window">
                 <div>
@@ -42,19 +42,22 @@
                 </div>
             </div>
             <div>
-                <svg id='colorRepresentation' style="height: 100px; width: 100px; background-color: rgb(51, 51, 51)" ></svg>
-                <h2 id="pixelData" style='margin-left: 20px;color:white; font-size: 2em; width: 200px; background-color: dimgray; padding-left: 10px; display: inline;'></h2>
-            </div>
+                    <h1 id="scaleSize" style='color:white;'>Current Scale: 1px == 1px</h1>            
+
+             </div>
            </div>
-        <span>
-            <h1 id="scaleSize" style='color:white;'>Current Scale: 1px == 1px</h1>            
-            <p id='rgbHeader' style='margin-left: 450px;font-family: VT323, monospace;font-size: 2em; display: inline;'></p>
-        </span>
         <div style="width: 100%;">
-            <svg style='float:left; position:fixed; height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg); z-index: 99' id='zoomBox'></svg>
-            <canvas id='coreImg' class='coreImg' style='position:relative;left: 440px'src="#" alt=""></canvas>
+                <svg id='colorRepresentation' style="height: 100px; width: 100px;position:fixed; background-color: rgb(51, 51, 51);z-index: 99" ></svg>
+                <br>
+                <h2 id="pixelData" style='margin-left: 50px;position:fixed;color:white; font-size: 2em; background-color: dimgray; padding-left: 10px; display: inline;z-index: 99; border-radius: 5px;'></h2>
+                <p id='rgbHeader' style='margin-left: 450px; font-family: VT323, monospace;font-size: 2em;'></p>
         </div>
-        <div class='containerBorder' style ='position:relative; left: 440px'id="divheight">
+        <div style="width: 100%;">
+            
+            <svg style='float:left; position:fixed; height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg); z-index: 99' id='zoomBox'></svg>
+            <canvas id='coreImg' class='coreImg' style='position:relative;left: 450px'src="#" alt=""></canvas>
+        </div>
+        <div class='containerBorder' style ='position:relative; left: 450px'id="divheight">
                 <br>
                 <img id="myImg" style='border-color: gray;
                 border:4px solid gray;
