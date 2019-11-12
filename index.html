@@ -17,12 +17,18 @@
             padding-left: 10px;'>
                 Pixel Junkie
             </h1>
+            <h1 style='color:white;'>Pixels are back on the menu, boys.</h1>             
+        <div>
+            <h2 style="display: inline; color:white;">Upload your image</h2>
+            <input  class='button big-btn' type='file' />
+            <input id="clickMe" class='button medium-btn' type="button" value="Destroy The Pixels" onclick="removeFunction();"/>
+            <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
+            <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/>
             <input class='button medium-btn' type="button" value="Help Menu" onclick="window.location.href = '#open-modal';" style="display: inline;"/>
             <div id="open-modal" class="modal-window">
                 <div>
                     <a href="#modal-close" title="Close" class="modal-close">close &times;</a>
-                    
-                    <h2 style="font-size: 4em;">Junkie's Menu:</h2>
+                    <h2 style="font-size: 4em;">Reading Material:</h2>
                 <div>
                     <p >(Upon uploading an image)</p>
                     <h1 style="font-size: 1.5em;">> 1. Scale image to your choosing.</h1> 
@@ -35,22 +41,16 @@
                 </div>
                 </div>
             </div>
-            <h1 style='color:white;'>Pixels are back on the menu, boys.</h1>             
-        <div>
-            <input  class='button big-btn' type='file' />
-            <input id="clickMe" class='button medium-btn' type="button" value="Destroy The Pixels" onclick="removeFunction();"/>
-            <input id="setScale"  class='button medium-btn' type="button" value="Modify Image Scale" onclick="setSize();"/>
-            <input id="saveCanvas"  class='button medium-btn' type="button" value="Save Scaled Image" onclick="saveCanvasImg();"/><br>
-            <svg id='colorRepresentation' style="height: 100px; width: 100px; background-color: rgb(51, 51, 51)" ></svg>
-            <h2 id="pixelData" style='margin-left: 20px;color:white; font-size: 2em; width: 100%; background-color: dimgray; padding-left: 10px;'></h2>
-        </div>
+            <div>
+                <svg id='colorRepresentation' style="height: 100px; width: 100px; background-color: rgb(51, 51, 51)" ></svg>
+                <h2 id="pixelData" style='margin-left: 20px;color:white; font-size: 2em; width: 200px; background-color: dimgray; padding-left: 10px; display: inline;'></h2>
+            </div>
+           </div>
         <span>
             <h1 id="scaleSize" style='color:white;'>Current Scale: 1px == 1px</h1>            
-            <p id='rgbHeader' style='margin-left: 440px;font-family: VT323, monospace;font-size: 2em; display: inline;'></p>
-
+            <p id='rgbHeader' style='margin-left: 450px;font-family: VT323, monospace;font-size: 2em; display: inline;'></p>
         </span>
-
-        <div>
+        <div style="width: 100%;">
             <svg style='float:left; position:fixed; height: 440px; width: 440px; background-color: rgb(51, 51, 51); transform:rotate(180deg); z-index: 99' id='zoomBox'></svg>
             <canvas id='coreImg' class='coreImg' style='position:relative;left: 440px'src="#" alt=""></canvas>
         </div>

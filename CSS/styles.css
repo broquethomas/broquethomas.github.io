@@ -38,7 +38,7 @@ canvas {
 
 .modal-window {
   position: fixed;
-  background-color: rgba(200, 200, 200, 0.75);
+  background-color: rgba(50, 50, 50, 0.75);
   top: 0;
   right: 0;
   bottom: 0;
@@ -62,8 +62,8 @@ canvas {
   margin: 10% auto;
   border-radius: 25px;
   padding: 2rem;
-  background: #fff;
-  color: #444;
+  background: rgb(25, 25, 25);
+  color: rgb(200, 200, 200);
 }
 
 .modal-window header {
@@ -83,7 +83,7 @@ canvas {
 }
 
 .modal-close:hover {
-  color: #000;
+  color: rgb(225, 225, 225);
 }
 
 .modal-window h1 {
