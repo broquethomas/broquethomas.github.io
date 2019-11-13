@@ -22,10 +22,10 @@ let LSC = ""
 let RGBCount = [[],[],[]]
 let doIt = false
 let lastConvolutionSelection = 0
-let sharpenConvo = [[0,-1,0], [-1,5,-1], [0,-1,0]]
+let sharpenConvo = [[0,-1,0], [-1,8,-1], [0,-1,0]]
 let blurConvo = [[1,2,1], [2,4,2], [1,2,1]]
 let edgeEnhanceConvo = [[0,0,0], [-1,1,0], [0,0,0]]
-let edgeDetectConvo = [[0,1,0], [1,-4,1], [0,1,0]]
+let edgeDetectConvo = [[0,-1,0], [-1,4,-1], [0,-1,0]]
 let embossConvo = [[-2,-1,0], [-1,1,1], [0,1,2]]
 let convolutions = []
 let useFilter = false
@@ -303,7 +303,7 @@ function swapFunctionNeg(){
 }
 
 function swapFunctionBin(){
-    if (window.confirm("Use Binary image as src image?")) { 
+    if (window.confirm("Use BINARY image as src image?")) { 
         imageSelection = 5
         actual = 1
         var img = document.getElementById('myImg')
@@ -480,7 +480,9 @@ function imageWork(height){
 
                     }else{
                         if(lastConvolutionSelection == 2){
-                            redCollection += Math.ceil((red*filter[x][y])*(1/16))
+                            redCollection += Math.floor((red*filter[x][y])*(1/16))
+                        }else if(lastConvolutionSelection == 1){
+                            redCollection += Math.floor((red*filter[x][y])*(1/4))
                         }else{
                             redCollection += red*filter[x][y]
                         }
@@ -490,7 +492,9 @@ function imageWork(height){
 
                     }else{
                         if(lastConvolutionSelection == 2){
-                            greenCollection += Math.ceil((green*filter[x][y])*(1/16))
+                            greenCollection += Math.floor((green*filter[x][y])*(1/16))
+                        }else if(lastConvolutionSelection == 1){
+                            greenCollection += Math.floor((green*filter[x][y])*(1/4))
                         }else{
                             greenCollection += green*filter[x][y]
                         }
@@ -499,7 +503,9 @@ function imageWork(height){
 
                     }else{
                         if(lastConvolutionSelection == 2){
-                            blueCollection += Math.ceil((blue*filter[x][y])*(1/16))
+                            blueCollection += Math.floor((blue*filter[x][y])*(1/16))
+                        }else if(lastConvolutionSelection == 1){
+                            blueCollection += Math.floor((blue*filter[x][y])*(1/4))
                         }else{
                             blueCollection += blue*filter[x][y]
                         }
