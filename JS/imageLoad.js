@@ -21,6 +21,15 @@ let firstSetup = true
 let LSC = ""
 let RGBCount = [[],[],[]]
 let doIt = false
+let lastConvolutionSelection = 0
+let sharpenConvo = [[0,-1,0], [-1,5,-1], [0,-1,0]]
+let blurConvo = [[1,2,1], [2,4,2], [1,2,1]]
+let edgeEnhanceConvo = [[0,0,0], [-1,1,0], [0,0,0]]
+let edgeDetectConvo = [[0,1,0], [1,-4,1], [0,1,0]]
+let embossConvo = [[-2,-1,0], [-1,1,1], [0,1,2]]
+let convolutions = []
+let useFilter = false
+let running = false
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -35,6 +44,32 @@ window.addEventListener('load', function() {
         }
     });
 });
+
+
+function setConvolution(){
+    let none = document.getElementById('none')
+    let sharpen = document.getElementById('sharpen')
+    let blur = document.getElementById('blur')
+    let edgeEnhance = document.getElementById('edgeEnhance')
+    let edgeDetect = document.getElementById('edgeDetect')
+    let emboss = document.getElementById('emboss')
+    let convolutionArray = [none,sharpen,blur,edgeEnhance,edgeDetect,emboss]
+    convolutionArray[lastConvolutionSelection].checked = false
+    var check = true
+    for(x = 0; x< convolutionArray.length; x++){
+        if(convolutionArray[x].checked){
+            lastConvolutionSelection = x
+            check = false
+        }
+    }
+    if(check){
+        convolutionArray[lastConvolutionSelection].checked = true
+        console.log(lastConvolutionSelection)
+    }
+    
+    
+
+}
 
 function setSidePixel(color){
     document.getElementById('colorRepresentation').innerHTML = ""
@@ -294,7 +329,8 @@ function removeFunction() {
     canvasB.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
     canvasGR.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
     canvasNeg.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
-    canvasCore.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
+    canvasCore.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
+    canvasBinary.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');  
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
     document.getElementById("zoomBox").innerHTML = ""
@@ -335,6 +371,8 @@ function setSize(){
             setSize()
         }
         actual = newSize
+        canvasCore.width = imageWidth*actual
+        canvasCore.height = imageHeight*actual
         size = actual + "px"
         document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
         if(imgSrc != ""){
@@ -379,6 +417,10 @@ function histogramHelper(rgbData){
     
 }
 function imageWork(height){
+    if(lastConvolutionSelection != 0){
+        useFilter = true
+        convolutionArray = [[],sharpenConvo, blurConvo, edgeEnhanceConvo, edgeDetectConvo, embossConvo]
+    }
     let threshold = parseInt(document.getElementById('threshold').value)
     if(isNaN(threshold)){
         threshold = 127
@@ -386,7 +428,7 @@ function imageWork(height){
     imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
     let theHeight = height;
     let theWidth = 0;
-    let iterations = 0;
+    let iteration = 0;
     for(let i = 0; i < imageWidth; ++i) {
     	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
@@ -419,37 +461,61 @@ function imageWork(height){
         contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         contextBinary.fillStyle = bV;
         contextBinary.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
-
         let oldTheWidth = theWidth;
-        while(color == "rgba(" + imageData[n+4] + ", " + imageData[n+5] + ", " + imageData[n+6] + ", " + (parseInt(imageData[n+7])/255).toFixed(2) + ")" && iterations < imageWidth-1){
-            i++;
-            n = 4 * (i + height*imageWidth);
-            theWidth += actual;
-            check += 1;
-            contextR.fillStyle = r;
-            contextR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
-            contextG.fillStyle = g;
-            contextG.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
-            contextB.fillStyle = b;
-            contextB.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
-            contextGR.fillStyle = gr;
-            contextGR.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
-            contextNeg.fillStyle = neg;
-            contextNeg.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
-            contextBinary.fillStyle = bV;
-            contextBinary.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
-        }
-        for(rgbCheck = 0; rgbCheck < check; rgbCheck += 1){
-            RGBCount[0].push(rVal)
-            RGBCount[1].push(gVal)
-            RGBCount[2].push(bVal)
-        }
+        if(useFilter){
+            var filter = convolutionArray[lastConvolutionSelection]
+            var search = -Math.floor((filter.length)/2)
+            var subSearch = 0
+            var redCollection = 0
+            var greenCollection = 0
+            var blueCollection = 0
+            for(x = 0; x< filter.length; x++){
+                subSearch = -Math.floor((filter[x].length)/2)
+                for(y = 0; y< filter[x].length; y++){
+                    //var red = imagedata[(n+(subSearch*4))]
+                    var red = imageData[((iteration*4)+(imageWidth*(height+search)*4)+(subSearch*4))]
+                    var green = imageData[((iteration*4)+(imageWidth*(height+search)*4)+(subSearch*4))+1]
+                    var blue = imageData[((iteration*4)+(imageWidth*(height+search)*4)+(subSearch*4))+2]
+                    if(isNaN(red) || red == 0){
 
+                    }else{
+                        if(lastConvolutionSelection == 2){
+                            redCollection += Math.ceil((red*filter[x][y])*(1/16))
+                        }else{
+                            redCollection += red*filter[x][y]
+                        }
+                        
+                    }
+                    if(isNaN(green) || green == 0){
+
+                    }else{
+                        if(lastConvolutionSelection == 2){
+                            greenCollection += Math.ceil((green*filter[x][y])*(1/16))
+                        }else{
+                            greenCollection += green*filter[x][y]
+                        }
+                    }
+                    if(isNaN(blue) || blue ==0){
+
+                    }else{
+                        if(lastConvolutionSelection == 2){
+                            blueCollection += Math.ceil((blue*filter[x][y])*(1/16))
+                        }else{
+                            blueCollection += blue*filter[x][y]
+                        }
+                    }
+                    subSearch += 1
+                }
+                search += 1
+            }
+            color = "rgba(" + redCollection%257 + ", " + greenCollection%257 + ", " + blueCollection%257 + ", " + (parseInt(imageData[n+3])/25).toFixed(2) + ")"
+        }
         ctx.fillStyle = color;
         ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
         contextCore.fillStyle = color;
         contextCore.fillRect(oldTheWidth, height*actual , check*actual, actual);
         theWidth += actual;
+        iteration += 1
     }
     if (height + 1 < imageHeight) {
         if(doIt){
@@ -474,6 +540,8 @@ function imageWork(height){
             //var temp = RGBCount[rgbSCheck].sort((a, b) => a - b);
             //RGBCount[rgbSCheck] = temp
         }
+        //imageData = contextCore.getImageData(0, 0, imageWidth, imageHeight).data;
+        useFilter = false
         document.getElementById('uploadLabel').textContent = "Great, success."
         document.getElementById('zoomBox').style.setProperty('--box-shadow-color', 'white');
         downloadHref = canvasD.toDataURL('image/png');
@@ -570,6 +638,7 @@ function setupRGB(){
     canvasBinary.height = imageHeight
     canvasBinary.width = imageWidth
     contextBinary = canvasBinary.getContext('2d')
+    canvasBinary.style.setProperty('--box-shadow-color', 'black');
 
 
 }

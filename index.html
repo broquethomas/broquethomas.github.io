@@ -18,10 +18,17 @@
             </h1>
             <div>
                 <h1 style='color:white; display: inline;'>Pixels are back on the menu, boys. </h1>
-                <h1 style='color:white; margin-left: 400px; display: inline;'> Binary Threshold:</h1>               
+                <h1 style='color:white; margin-left: 250px; display: inline;'> Binary Threshold:   </h1>               
                 <input id='threshold' type="text" name="Binary Threshold" placeholder="(0-254)  Default: 127" class='button medium-btn'style='color:white;background-color:black;display: inline;'>
+                <div style="margin-left: 10px;display: inline;">
+                        <h1 style="display: inline;color:white; font-size: 1.4em;margin-left: 10px;">None</h1><input id='none'type="checkbox" checked='checked'name="none"style='margin-left: 5px;'onclick="setConvolution();">
+                        <h1 style="display: inline;color:white; font-size: 1.4em; margin-left: 10px;">Sharpen</h1><input id='sharpen'type="checkbox" name="sharpen" style='margin-left: 5px;' onclick="setConvolution();">
+                        <h1 style="display: inline;color:white; font-size: 1.4em;margin-left: 10px;">Blur</h1><input id='blur'type="checkbox" name="blur"style='margin-left: 5px;'onclick="setConvolution();">
+                        <h1 style="display: inline;color:white; font-size: 1.4em;margin-left: 10px;">Edge Enhance</h1><input id='edgeEnhance'type="checkbox" name="edgeEnhance"style='margin-left: 5px;'onclick="setConvolution();">
+                        <h1 style="display: inline;color:white; font-size: 1.4em;margin-left: 10px;">Edge Detect</h1><input id='edgeDetect'type="checkbox" name="edgeDetect"style='margin-left: 5px;'onclick="setConvolution();">
+                        <h1 style="display: inline;color:white; font-size: 1.4em;margin-left: 10px;">Emboss</h1><input id='emboss'type="checkbox" name="emboss"style='margin-left: 5px;'onclick="setConvolution();">
+                </div>
             </div>
-            
         <div>
             <h2 id='uploadLabel' style="display: inline; color:white;">C'mon, just upload your image.</h2>
             <input  class='button medium-btn' type='file' />
