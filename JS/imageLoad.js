@@ -1,3 +1,4 @@
+
 //Broque Thomas, Pixel Junkie, Oct 31, 2019
 let imageHeight = 0;
 let imageWidth = 0;
@@ -30,6 +31,8 @@ let embossConvo = [[-2,-1,0], [-1,1,1], [0,1,2]]
 let convolutions = []
 let useFilter = false
 let running = false
+let buildCustomMatrix = [[0,0,0], [0,1,0], [0,0,0]]
+let customMatrixMultiply = 1
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -45,6 +48,113 @@ window.addEventListener('load', function() {
     });
 });
 
+function toggleCustomDiv() {
+    var x = document.getElementById("customMatrix");
+    if (x.style.display === "none") {
+      x.style.display = "inline";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+  function convertArray(arr) {
+    let len = arr.length;
+    if (parseInt(Math.sqrt(len)) * Math.sqrt(len) != len) {
+        return null;
+    }
+
+    let result = []
+    for(let i = 0; i < Math.sqrt(len); i++) {
+        result.push(arr.splice(0, Math.sqrt(len)));
+    }
+    for(x = 0; x < result.length; x++){
+        for(y = 0; y < result[x].length; y++){
+            result[x][y] = parseInt(result[x][y])
+        }
+    }
+    return result;
+}
+
+  function checkCustomMatrix(){
+      let theMatrix = String(document.getElementById('customMatrix').value)
+      if(theMatrix == ""){
+          theMatrix = String(document.getElementById('customMatrix').placeholder)
+      }
+      let matrix = ""
+      let equation = ""
+      let initialSplit = theMatrix.split("*")
+      if( initialSplit.length == 1){
+        matrix = String(initialSplit)
+        matrix = matrix.replace(" ", "")
+        if(matrix.split(',').length < 8){
+            matrix = "[[0,0,0], [0,1,0], [0,0,0]]"
+            document.getElementById('customMatrix').value = ""
+            document.getElementById('customMatrix').placeholder = "Identity: (1)*[[0,0,0], [0,1,0], [0,0,0]]"
+
+        }
+        equation = "(1)"
+      }else if(initialSplit.length>2){
+            matrix = "[[0,0,0], [0,1,0], [0,0,0]]"
+            document.getElementById('customMatrix').value = ""
+            document.getElementById('customMatrix').placeholder = "Identity: (1)*[[0,0,0], [0,1,0], [0,0,0]]"
+            equation = "(1)"
+      }else{
+        matrix = initialSplit[1]
+        equation = initialSplit[0]
+      }
+      let number = -1
+      if(equation.length == 3){
+            number = parseInt(equation[2])
+            if(isNaN(number)){
+                number = -1
+            }
+      }else if(equation.length == 1){
+            number = parseInt(equation[0])
+            if(isNaN(number)){
+                number = -1
+            }
+      }else{
+         equation = equation.replace("(", "")
+         equation = equation.replace(")", "")
+         var tempSplit = equation.split("/")
+         var tempNum1 = parseInt(tempSplit[0])
+         var tempNum2 = parseInt(tempSplit[1])
+         if(isNaN(tempNum1) || isNaN(tempNum2)){
+            number = -1
+         }else{
+             number = tempNum1/tempNum2
+         }
+      }
+      console.log(matrix)
+      let allNumsString = matrix.match(/\d+([\.]\d+)?/g)
+      buildCustomMatrix = convertArray(allNumsString)
+      
+      if(buildCustomMatrix == null){
+        buildCustomMatrix = [[0,0,0], [0,1,0], [0,0,0]]
+        customMatrixMultiply = 1
+      }else{
+        
+        let cont = true
+          for(x = 0; x< buildCustomMatrix.length; x++){
+                if(buildCustomMatrix[x].length != buildCustomMatrix.length){
+                    cont = false
+                }
+          }
+          if(cont){
+              if(number == -1){
+                  number = 1
+              }
+              customMatrixMultiply = number
+          }else{
+            buildCustomMatrix = [[0,0,0], [0,1,0], [0,0,0]]
+            document.getElementById('customMatrix').value = ""
+            document.getElementById('customMatrix').placeholder = "Identity: (1)*[[0,0,0], [0,1,0], [0,0,0]]"            
+            customMatrixMultiply = 1
+          }
+      }
+      
+  }
+
 
 function setConvolution(){
     let none = document.getElementById('none')
@@ -53,8 +163,12 @@ function setConvolution(){
     let smooth = document.getElementById('smooth')
     let edgeDetect = document.getElementById('edgeDetect')
     let emboss = document.getElementById('emboss')
-    let convolutionArray = [none,sharpen,blur,smooth,edgeDetect,emboss]
+    let custom = document.getElementById('custom')
+    let convolutionArray = [none,sharpen,blur,smooth,edgeDetect,emboss,custom]
     convolutionArray[lastConvolutionSelection].checked = false
+    if(lastConvolutionSelection == 6){
+        toggleCustomDiv()
+    }
     var check = true
     for(x = 0; x< convolutionArray.length; x++){
         if(convolutionArray[x].checked){
@@ -66,8 +180,12 @@ function setConvolution(){
         convolutionArray[lastConvolutionSelection].checked = true
         console.log(lastConvolutionSelection)
     }
-    
+    if(lastConvolutionSelection == 6){
+        toggleCustomDiv()
+    }
 }
+
+
 
 function setSidePixel(color){
     document.getElementById('colorRepresentation').innerHTML = ""
@@ -389,21 +507,23 @@ function setSize(){
 function startImage() {
     setupRGB();
     if(imageHeight*imageWidth < 10000){
-        document.getElementById('uploadLabel').textContent = "Scaling up?"
+        document.getElementById('uploadLabel').textContent = "Small-scale no fail, boys."
     }else if(imageHeight*imageWidth < 50000){
-        document.getElementById('uploadLabel').textContent = "Just a quick one."
+        document.getElementById('uploadLabel').textContent = "Just the quick one."
     }else if(imageHeight*imageWidth < 100000){
-        document.getElementById('uploadLabel').textContent = "Okay just a sec, here."
+        document.getElementById('uploadLabel').textContent = "(R,G,B) from A - Z, boys."
     }else if(imageHeight*imageWidth < 1000000){
-        document.getElementById('uploadLabel').textContent = "Good pix' pics"
+        document.getElementById('uploadLabel').textContent = "Full-on pix' pics, boys."
     }else if(imageHeight*imageWidth < 2000000){
-        document.getElementById('uploadLabel').textContent = "So many pixels, just for me!?."
+        document.getElementById('uploadLabel').textContent = "Looping pics, snagging pix'"
     }else if(imageHeight*imageWidth < 4000000){
-        document.getElementById('uploadLabel').textContent = "The pixel density is just marvelous."
+        document.getElementById('uploadLabel').textContent = "Pixelation calculation, boys."
     }else{
-        document.getElementById('uploadLabel').textContent = "I need time to think about what you've done."
+        document.getElementById('uploadLabel').textContent = "Pixelation Escalation, boys."
     }
-    
+    if(lastConvolutionSelection == 6){
+        checkCustomMatrix()
+    }
     document.getElementById('titleLabel').classList.add('rainbow');
     temporaryBox.innerHTML = ""
     document.getElementById('rgbHeader').textContent = "*RGB Data*  " + (imageWidth*actual) + "x" + (imageHeight*actual) + "px image."
@@ -417,7 +537,7 @@ function histogramHelper(rgbData){
 function imageWork(height){
     if(lastConvolutionSelection != 0){
         useFilter = true
-        convolutionArray = [[],sharpenConvo, blurConvo, smoothConvo, edgeDetectConvo, embossConvo]
+        convolutionArray = [[],sharpenConvo, blurConvo, smoothConvo, edgeDetectConvo, embossConvo, buildCustomMatrix]
     }
     let threshold = parseInt(document.getElementById('threshold').value)
     if(isNaN(threshold)){
@@ -461,6 +581,7 @@ function imageWork(height){
         contextBinary.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         let oldTheWidth = theWidth;
         if(useFilter){
+            
             var filter = convolutionArray[lastConvolutionSelection]
             var search = -Math.floor((filter.length)/2)
             var subSearch = 0
@@ -481,6 +602,8 @@ function imageWork(height){
                             redCollection += Math.floor((red*filter[x][y])*(1/16))
                         }else if(lastConvolutionSelection == 3){
                             redCollection += Math.floor((red*filter[x][y])*(1/273))
+                        }else if(lastConvolutionSelection == 6){
+                            redCollection += Math.floor((red*filter[x][y])*(customMatrixMultiply))
                         }else{
                             redCollection += red*filter[x][y]
                         }
@@ -493,6 +616,8 @@ function imageWork(height){
                             greenCollection += Math.floor((green*filter[x][y])*(1/16))
                         }else if(lastConvolutionSelection == 3){
                             greenCollection += Math.floor((green*filter[x][y])*(1/273))
+                        }else if(lastConvolutionSelection == 6){
+                            greenCollection += Math.floor((green*filter[x][y])*(customMatrixMultiply))
                         }else{
                             greenCollection += green*filter[x][y]
                         }
@@ -504,6 +629,8 @@ function imageWork(height){
                             blueCollection += Math.floor((blue*filter[x][y])*(1/16))
                         }else if(lastConvolutionSelection == 3){
                             blueCollection += Math.floor((blue*filter[x][y])*(1/273))
+                        }else if(lastConvolutionSelection == 6){
+                            blueCollection += Math.floor((blue*filter[x][y])*(customMatrixMultiply))
                         }else{
                             blueCollection += blue*filter[x][y]
                         }
