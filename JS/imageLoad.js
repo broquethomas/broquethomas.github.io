@@ -22,9 +22,9 @@ let LSC = ""
 let RGBCount = [[],[],[]]
 let doIt = false
 let lastConvolutionSelection = 0
-let sharpenConvo = [[0,-1,0], [-1,8,-1], [0,-1,0]]
+let sharpenConvo = [[0,-1,0], [-1,4,-1], [0,-1,0]]
 let blurConvo = [[1,2,1], [2,4,2], [1,2,1]]
-let edgeEnhanceConvo = [[0,0,0], [-1,1,0], [0,0,0]]
+let smoothConvo = [[1,4,7,4,1],[4,16,26,16,4],[7,26,41,26,7],[4,16,26,16,4],[1,4,7,4,1]]
 let edgeDetectConvo = [[0,-1,0], [-1,4,-1], [0,-1,0]]
 let embossConvo = [[-2,-1,0], [-1,1,1], [0,1,2]]
 let convolutions = []
@@ -50,10 +50,10 @@ function setConvolution(){
     let none = document.getElementById('none')
     let sharpen = document.getElementById('sharpen')
     let blur = document.getElementById('blur')
-    let edgeEnhance = document.getElementById('edgeEnhance')
+    let smooth = document.getElementById('smooth')
     let edgeDetect = document.getElementById('edgeDetect')
     let emboss = document.getElementById('emboss')
-    let convolutionArray = [none,sharpen,blur,edgeEnhance,edgeDetect,emboss]
+    let convolutionArray = [none,sharpen,blur,smooth,edgeDetect,emboss]
     convolutionArray[lastConvolutionSelection].checked = false
     var check = true
     for(x = 0; x< convolutionArray.length; x++){
@@ -67,8 +67,6 @@ function setConvolution(){
         console.log(lastConvolutionSelection)
     }
     
-    
-
 }
 
 function setSidePixel(color){
@@ -419,7 +417,7 @@ function histogramHelper(rgbData){
 function imageWork(height){
     if(lastConvolutionSelection != 0){
         useFilter = true
-        convolutionArray = [[],sharpenConvo, blurConvo, edgeEnhanceConvo, edgeDetectConvo, embossConvo]
+        convolutionArray = [[],sharpenConvo, blurConvo, smoothConvo, edgeDetectConvo, embossConvo]
     }
     let threshold = parseInt(document.getElementById('threshold').value)
     if(isNaN(threshold)){
@@ -481,8 +479,8 @@ function imageWork(height){
                     }else{
                         if(lastConvolutionSelection == 2){
                             redCollection += Math.floor((red*filter[x][y])*(1/16))
-                        }else if(lastConvolutionSelection == 1){
-                            redCollection += Math.floor((red*filter[x][y])*(1/4))
+                        }else if(lastConvolutionSelection == 3){
+                            redCollection += Math.floor((red*filter[x][y])*(1/273))
                         }else{
                             redCollection += red*filter[x][y]
                         }
@@ -493,8 +491,8 @@ function imageWork(height){
                     }else{
                         if(lastConvolutionSelection == 2){
                             greenCollection += Math.floor((green*filter[x][y])*(1/16))
-                        }else if(lastConvolutionSelection == 1){
-                            greenCollection += Math.floor((green*filter[x][y])*(1/4))
+                        }else if(lastConvolutionSelection == 3){
+                            greenCollection += Math.floor((green*filter[x][y])*(1/273))
                         }else{
                             greenCollection += green*filter[x][y]
                         }
@@ -504,8 +502,8 @@ function imageWork(height){
                     }else{
                         if(lastConvolutionSelection == 2){
                             blueCollection += Math.floor((blue*filter[x][y])*(1/16))
-                        }else if(lastConvolutionSelection == 1){
-                            blueCollection += Math.floor((blue*filter[x][y])*(1/4))
+                        }else if(lastConvolutionSelection == 3){
+                            blueCollection += Math.floor((blue*filter[x][y])*(1/273))
                         }else{
                             blueCollection += blue*filter[x][y]
                         }
@@ -514,7 +512,13 @@ function imageWork(height){
                 }
                 search += 1
             }
-            color = "rgba(" + redCollection%257 + ", " + greenCollection%257 + ", " + blueCollection%257 + ", " + (parseInt(imageData[n+3])/25).toFixed(2) + ")"
+            if(lastConvolutionSelection == 1){
+                redCollection += rVal
+                greenCollection += gVal
+                blueCollection += bVal
+            }
+            
+            color = "rgba(" + redCollection + ", " + greenCollection + ", " + blueCollection + ", " + (parseInt(imageData[n+3])/25).toFixed(2) + ")"
         }
         ctx.fillStyle = color;
         ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
