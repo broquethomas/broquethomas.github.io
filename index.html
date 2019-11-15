@@ -72,9 +72,7 @@
         </div>
         <div class='containerBorder' style ='position:relative; left: 450px'id="divheight">
                 <br>
-                <img id="myImg" style='border-color: gray;
-                border:4px solid gray;
-                margin: 10px;'src="#" alt="">
+                <canvas id='convoImage' title="Image w/ Filter" src="#" alt="" onclick="swapFunctionC();"></canvas>
                 <canvas id='redImg' title="Red Channel" src="#" alt="" onclick="swapFunctionR();"></canvas>
                 <br>
                 <canvas id='greenImg' title="Green Channel" src="#" alt="" onclick="swapFunctionG();"></canvas>
@@ -84,6 +82,11 @@
                 <canvas id='negImg' title="Negative Image" src="#" alt="" onclick="swapFunctionNeg();"></canvas>
                 <br>
                 <canvas id='binaryMask' title="Binary Image" src="#" alt="" ></canvas>
+                <img id="uploadImg" title='Original Image' style='border-color: gray;
+                border:4px solid gray;
+                margin: 10px;' alt="" onclick="swapFunctionOrg();">
+                <br>
+                <img id="myImg" style='display: none;'src="#" alt="">
                 <canvas id='histogram' src="#" alt=""></canvas>
         </div>
     </div>

@@ -5,7 +5,7 @@ let imageWidth = 0;
 let imageCopy = new Image();
 let imageData;
 let canvas, context;
-let canvasR, canvasG, canvasB, canvasGR, canvasNeg, canvasCore, canvasBinary, canvasHist, contextR, contextG, contextB, contextGR, contextNeg, contextCore, contextBinary, contextHist
+let canvasR, canvasG, canvasB, canvasGR, canvasNeg, canvasCore, canvasBinary, canvasConv, canvasHist, contextR, contextG, contextB, contextGR, contextNeg, contextCore, contextBinary, contextConv, contextHist
 let lastSRC = ""
 let img = new Image();
 let actual = 1
@@ -33,6 +33,7 @@ let useFilter = false
 let running = false
 let buildCustomMatrix = [[0,0,0], [0,1,0], [0,0,0]]
 let customMatrixMultiply = 1
+let uploadSrc
 
 window.addEventListener('load', function() {
     document.querySelector('input[type="file"]').addEventListener('change', function() {
@@ -43,6 +44,7 @@ window.addEventListener('load', function() {
             img.src = URL.createObjectURL(this.files[0]); // set src to file url
             imgSrc = img.src
             lastSRC = img.src
+            uploadSrc = img.src
             img.onload = imageIsLoaded; // optional onload event listener
         }
     });
@@ -370,6 +372,30 @@ function swapFunctionR(){
       }
 }
 
+function swapFunctionC(){
+    if (window.confirm("Use Filter channel as src image?")) { 
+        imageSelection = 6
+        actual = 1
+        var img = document.getElementById('myImg')
+        img.src = imageArray[imageSelection].src
+        imgSrc = img.src
+        lastSRC = img.src
+        img.onload = imageIsLoaded
+      }
+}
+
+function swapFunctionOrg(){
+    if (window.confirm("Use Original channel as src image?")) { 
+        //imageSelection = 6
+        actual = 1
+        var img = document.getElementById('myImg')
+        img.src = uploadSrc
+        imgSrc = img.src
+        lastSRC = img.src
+        img.onload = imageIsLoaded
+      }
+}
+
 function swapFunctionG(){
     if (window.confirm("Use GREEN channel as src image?")) { 
         imageSelection = 1
@@ -446,10 +472,12 @@ function removeFunction() {
     canvasGR.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)'); 
     canvasNeg.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
     canvasCore.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
-    canvasBinary.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');  
+    canvasBinary.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');
+    canvasConv.style.setProperty('--box-shadow-color', 'rgb(51, 51, 51)');  
+  
     document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
     document.getElementById("myImg").src = ""
-    document.getElementById("zoomBox").innerHTML = ""
+    document.getElementById('uploadImg').style.display = "none"
     document.getElementById("zoomBox").innerHTML = ""
     contextR.clearRect(0, 0, canvasR.width, canvasR.height);
     contextG.clearRect(0, 0, canvasG.width, canvasG.height);
@@ -457,6 +485,7 @@ function removeFunction() {
     contextGR.clearRect(0, 0, canvasGR.width, canvasGR.height);
     contextNeg.clearRect(0, 0, canvasNeg.width, canvasNeg.height);
     contextBinary.clearRect(0, 0, canvasBinary.width, canvasBinary.height)
+    contextConv.clearRect(0,0,canvasConv.width, canvasConv.height)
     ctx.clearRect(0, 0, canvasD.width, canvasD.height);
     contextCore.clearRect(0, 0, canvasCore.width, canvasCore.height)
     canvasCore.height = 0
@@ -473,6 +502,8 @@ function removeFunction() {
     canvasNeg.width = 0
     canvasBinary.width = 0
     canvasBinary.height = 0
+    canvasConv.width = 0
+    canvasConv.height = 0
 }
 
 function setSize(){
@@ -487,25 +518,27 @@ function setSize(){
             setSize()
         }
         actual = newSize
-        canvasCore.width = imageWidth*actual
-        canvasCore.height = imageHeight*actual
+        //canvasCore.width = imageWidth*actual
+        //canvasCore.height = imageHeight*actual
         size = actual + "px"
         document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
         if(imgSrc != ""){
-            imageCopy.src = imgSrc
-            canvas = document.createElement('canvas');
-            canvas.height = imageHeight
-            canvas.width = imageWidth
-            context = canvas.getContext('2d');
-            img.src = imageCopy.src;
-            context.drawImage(img, 0, 0);
-            startImage();
+            //imageCopy.src = imgSrc
+            //canvas = document.createElement('canvas');
+            //canvas.height = imageHeight
+            //canvas.width = imageWidth
+            //context = canvas.getContext('2d');
+            //img.src = imageCopy.src;
+            //context.drawImage(img, 0, 0);
+            //startImage();
         }
+        startImage();
     }
 }
 
 function startImage() {
     setupRGB();
+    document.getElementById('uploadImg').style.display = "inline"
     if(imageHeight*imageWidth < 10000){
         document.getElementById('uploadLabel').textContent = "Small-scale no fail, boys."
     }else if(imageHeight*imageWidth < 50000){
@@ -535,6 +568,7 @@ function histogramHelper(rgbData){
     
 }
 function imageWork(height){
+    imageArray = []
     if(lastConvolutionSelection != 0){
         useFilter = true
         convolutionArray = [[],sharpenConvo, blurConvo, smoothConvo, edgeDetectConvo, embossConvo, buildCustomMatrix]
@@ -550,6 +584,7 @@ function imageWork(height){
     for(let i = 0; i < imageWidth; ++i) {
     	let n = 4 * (i + height*imageWidth);
         let color = "rgba(" + imageData[n] + ", " + imageData[n+1] + ", " + imageData[n+2] + ", " + (parseInt(imageData[n+3])/255).toFixed(2) + ")"
+        let colorCopy = color + ""
         let check = 1;
         let rVal = imageData[n];
         let gVal = imageData[n+1];
@@ -647,9 +682,11 @@ function imageWork(height){
             
             color = "rgba(" + redCollection + ", " + greenCollection + ", " + blueCollection + ", " + (parseInt(imageData[n+3])/25).toFixed(2) + ")"
         }
+        contextConv.fillStyle = color;
+        contextConv.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
         ctx.fillStyle = color;
         ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
-        contextCore.fillStyle = color;
+        contextCore.fillStyle = colorCopy;
         contextCore.fillRect(oldTheWidth, height*actual , check*actual, actual);
         theWidth += actual;
         iteration += 1
@@ -684,29 +721,34 @@ function imageWork(height){
         downloadHref = canvasD.toDataURL('image/png');
         document.getElementById('titleLabel').textContent = "Pixel Junkie --> Processing complete."
         document.getElementById('titleLabel').classList.remove('rainbow'); 
+
         let tempImageR = new Image()
         tempImageR.src = canvasR.toDataURL()
         imageArray.push(tempImageR)
-        let tempImageG = new Image()
 
+        let tempImageG = new Image()
         tempImageG.src = canvasG.toDataURL()
         imageArray.push(tempImageG)
-        let tempImageB = new Image()
 
+        let tempImageB = new Image()
         tempImageB.src = canvasB.toDataURL()
         imageArray.push(tempImageB)
-        let tempImageGR = new Image()
 
+        let tempImageGR = new Image()
         tempImageGR.src = canvasGR.toDataURL()
         imageArray.push(tempImageGR)
-        let tempImageNeg = new Image()
 
+        let tempImageNeg = new Image()
         tempImageNeg.src = canvasNeg.toDataURL()
         imageArray.push(tempImageNeg)
 
         let tempImageBin = new Image()
         tempImageBin.src = canvasBinary.toDataURL()
         imageArray.push(tempImageBin)
+
+        let tempImageC = new Image()
+        tempImageC.src = canvasConv.toDataURL()
+        imageArray.push(tempImageC)
         myFunction(["color", Math.floor(imageHeight/2), Math.floor(imageWidth/2)])
 
         
@@ -730,6 +772,12 @@ function setupRGB(){
           }, false);
         firstSetup = false
     }
+    canvasConv = document.getElementById('convoImage');
+    canvasConv.height = imageHeight
+    canvasConv.width = imageWidth
+    contextConv = canvasConv.getContext('2d');
+    canvasConv.style.setProperty('--box-shadow-color', 'dimgray');
+
 
     canvasHist = document.getElementById('redImg');
     canvasHist.height = 800
@@ -784,18 +832,20 @@ function imageIsLoaded(e) {
     if (this.width*this.height < 225){
         alert( this.width*this.height + "px!? Not Enough! I Need More Pixels!")
     }else{
+        document.getElementById('uploadImg').src = uploadSrc
         imgSrc = this.src
         lastSRC = this.src 
         imageArray = []
         imageCopy.src = this.src
         imageHeight = this.height;
         imageWidth = this.width; 
+        //context.clearRect(0, 0, canvas.width, canvas.height)
         canvas = document.createElement('canvas');
         canvas.height = imageHeight
         canvas.width = imageWidth
         context = canvas.getContext('2d');
-        img.src = imageCopy.src;
-        context.drawImage(img, 0, 0)
+        //img.src = imageCopy.src;
+        context.drawImage(this, 0, 0)
         document.getElementById('scaleSize').innerText = "Current Scale: 1px == " + actual*actual +"px"
         var performance = window.performance;
         var t0 = performance.now();
