@@ -313,7 +313,6 @@ function getPixelData(x, y){
         document.getElementById('colorRepresentation').appendChild(rect)
         document.getElementById('pixelData').textContent = color 
     }
-    
 }
 
 function myFunction(color){
@@ -571,7 +570,7 @@ function imageWork(height){
     imageArray = []
     if(lastConvolutionSelection != 0){
         useFilter = true
-        convolutionArray = [[],sharpenConvo, blurConvo, smoothConvo, edgeDetectConvo, embossConvo, buildCustomMatrix]
+        convolutionArray = [[[0,0,0], [0,1,0], [0,0,0]],sharpenConvo, blurConvo, smoothConvo, edgeDetectConvo, embossConvo, buildCustomMatrix]
     }
     let threshold = parseInt(document.getElementById('threshold').value)
     if(isNaN(threshold)){
