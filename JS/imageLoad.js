@@ -683,7 +683,7 @@ function imageWork(height){
         }
         contextConv.fillStyle = color;
         contextConv.fillRect(Math.floor(parseInt(theWidth/actual)), height, check, 1);
-        ctx.fillStyle = color;
+        ctx.fillStyle = colorCopy;
         ctx.fillRect(oldTheWidth, height*actual, check*actual, actual);
         contextCore.fillStyle = colorCopy;
         contextCore.fillRect(oldTheWidth, height*actual , check*actual, actual);
